@@ -224,6 +224,23 @@ const crearTrabajador = async (req, res) => {
             });
         }
 
+        // Verificar que el administrador autenticado tenga acceso a la sección
+        const admin = await prisma.trabajadores.findUnique({
+            where: { id_trabajador: req.user.id },
+            include: { seccion: true }
+        });
+        const seccionDestino = await prisma.secciones.findUnique({
+            where: { id_seccion: idSeccionInt }
+        });
+
+        if (!admin || !admin.seccion || !seccionDestino) {
+            return res.status(400).json({ success: false, message: 'Sección o administrador no válidos.' });
+        }
+
+        if (admin.seccion.estado !== seccionDestino.estado) {
+            return res.status(403).json({ success: false, message: 'No puedes registrar trabajadores en secciones de otro estado.' });
+        }
+
         // Convertir fechas (asegurarse de que el formato sea correcto para new Date())
         const fechaNacimientoDate = new Date(fecha_nacimiento);
         const fechaIngresoDate = new Date(fecha_ingreso);
@@ -470,11 +487,21 @@ const actualizarTrabajador = async (req, res) => {
         const trabajadorExistente = await prisma.trabajadores.findUnique({
             where: {
                 id_trabajador: trabajadorId
-            }
+             },
+            include: { seccion: true } // Incluir la sección para verificar el estado
         });
 
         if (!trabajadorExistente) {
             return res.status(404).json({ success: false, message: 'Trabajador no encontrado para actualizar.' });
+        }
+// Verificar que el administrador autenticado tenga permiso para modificar este trabajador
+         const admin = await prisma.trabajadores.findUnique({
+            where: { id_trabajador: req.user.id },
+            include: { seccion: true }
+        });
+
+        if (!admin || !admin.seccion || admin.seccion.estado !== trabajadorExistente.seccion.estado) {
+            return res.status(403).json({ success: false, message: 'No tienes permiso para modificar trabajadores de otro estado.' });
         }
 
         // Verificar duplicados para campos que se están actualizando
@@ -520,6 +547,15 @@ const actualizarTrabajador = async (req, res) => {
         if (adscripcion !== undefined) dataToUpdate.adscripcion = adscripcion;
         if (id_seccion !== undefined) {
             const idSeccionIntUpdate = parseInt(id_seccion, 10);
+            // Verificar que la nueva sección pertenezca al mismo estado que el administrador
+            const seccionDestino = await prisma.secciones.findUnique({
+                where: { id_seccion: idSeccionIntUpdate },
+                select: { estado: true }
+            });
+            if (!seccionDestino || seccionDestino.estado !== admin.seccion.estado) {
+                return res.status(403).json({ success: false, message: 'No puedes asignar a una sección de otro estado.' });
+            }
+            // Conectar con la nueva sección
             dataToUpdate.seccion = {
                 connect: {
                     id_seccion: idSeccionIntUpdate
@@ -679,7 +715,8 @@ const eliminarTrabajador = async (req, res) => {
         const trabajadorExistente = await prisma.trabajadores.findUnique({
             where: {
                 id_trabajador: trabajadorId
-            }
+            },
+            include: { seccion: true }
         });
 
         if (!trabajadorExistente) {
@@ -687,6 +724,15 @@ const eliminarTrabajador = async (req, res) => {
                 success: false,
                 message: 'Trabajador no encontrado para eliminar.'
             });
+        }
+
+        const admin = await prisma.trabajadores.findUnique({
+            where: { id_trabajador: req.user.id },
+            include: { seccion: true }
+        });
+
+        if (!admin || !admin.seccion || admin.seccion.estado !== trabajadorExistente.seccion.estado) {
+            return res.status(403).json({ success: false, message: 'No tienes permiso para eliminar trabajadores de otro estado.' });
         }
 
         await prisma.trabajadores.delete({

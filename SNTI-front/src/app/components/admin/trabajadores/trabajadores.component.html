@@ -12,7 +12,7 @@
             class="form-control"
             placeholder="Buscar trabajador..."
             [(ngModel)]="filtroBusqueda"
-            (input)="filtrarTrabajadores()"
+            (ngModelChange)="filtrarTrabajadores()" 
             name="busqueda"
             autocomplete="off"
           />
@@ -76,10 +76,10 @@
                 <button class="btn btn-sm btn-primary me-1" (click)="verTrabajador(t.id_trabajador)">
                   <span class="material-icons">visibility</span>
                 </button>
-                <button class="btn btn-sm btn-warning me-1" (click)="editarTrabajador(t.id_trabajador)">
+                <button *ngIf="puedeModificar(t)" class="btn btn-sm btn-warning me-1" (click)="editarTrabajador(t.id_trabajador)">
                   <span class="material-icons">edit</span>
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="eliminarTrabajador(t.id_trabajador)">
+                <button *ngIf="puedeModificar(t)" class="btn btn-sm btn-danger" (click)="eliminarTrabajador(t.id_trabajador)">
                   <span class="material-icons">delete</span>
                 </button>
               </td>

@@ -9,6 +9,7 @@ import { Trabajador } from '../../../core/models/trabajador.model';
 
 import { SeccionesService } from '../../../core/services/secciones.service';
 import { Seccion } from '../../../core/models/seccion.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 // Validadores personalizados
 function emailsIgualesValidator(group: AbstractControl): ValidationErrors | null {
@@ -20,6 +21,19 @@ function passwordsIgualesValidator(group: AbstractControl): ValidationErrors | n
   const pass = group.get('contrasena')?.value;
   const pass2 = group.get('contrasena2')?.value;
   return (pass && pass2 && pass !== pass2) ? { passwordsNoCoinciden: true } : null;
+}
+
+function mayorDeEdadValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value) return null;
+  const fecha = new Date(value);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fecha.getFullYear();
+  const m = hoy.getMonth() - fecha.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
+    edad--;
+  }
+  return edad >= 18 ? null : { menorDeEdad: true };
 }
 
 @Component({
@@ -54,7 +68,7 @@ export class RegistroEmpleadoComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(100)]],
     apellido_materno: ['', [Validators.required, Validators.maxLength(100)]],
-    fecha_nacimiento: ['', Validators.required],
+    fecha_nacimiento: ['', [Validators.required, mayorDeEdadValidator]],
     sexo: ['', Validators.required],
     curp: ['', [
       Validators.required,
@@ -97,7 +111,8 @@ export class RegistroEmpleadoComponent implements OnInit {
     private fb: FormBuilder, 
     private trabajadoresService: TrabajadoresService,
     private route: ActivatedRoute,
-    private seccionesService: SeccionesService
+    private seccionesService: SeccionesService,
+    private authService: AuthService
   ) {}
 
   onFileChange(event: any) {
@@ -275,13 +290,16 @@ export class RegistroEmpleadoComponent implements OnInit {
   }
 
   ngOnInit() {
+    const estadoAdmin = this.authService.currentUser?.seccion.estado;
     this.seccionesService.getSecciones().subscribe({
       next: resp => {
         if (resp.success) {
-          this.secciones = resp.data.sort((a, b) =>
-            a.estado.localeCompare(b.estado) ||
-            a.numero_seccion - b.numero_seccion
-          );
+          this.secciones = resp.data
+            .filter(s => !estadoAdmin || s.estado === estadoAdmin)
+            .sort((a, b) =>
+              a.estado.localeCompare(b.estado) ||
+              a.numero_seccion - b.numero_seccion
+            );
         }
       },
       error: err => console.error('Error cargando secciones', err)

@@ -16,7 +16,7 @@ import { Usuario } from '../../../core/models/usuario.model';
 @Component({
   selector: 'app-trabajadores',
   standalone: true,
-  imports: [MatIconModule, RouterLink, FormsModule, NgClass, CommonModule],
+  imports: [MatIconModule, RouterLink, FormsModule, NgClass,CommonModule],
   templateUrl: './trabajadores.component.html',
   styleUrl: './trabajadores.component.css',
 })
@@ -114,11 +114,19 @@ export class TrabajadoresComponent implements OnInit {
     });
   }
 
+   puedeModificar(t: Trabajador): boolean {
+    return this.usuarioActual?.seccion?.estado === t.seccion?.estado;
+  }
+
   editarTrabajador(id: number) {
+    const trabajador = this.trabajadores.find(t => t.id_trabajador === id);
+    if (!trabajador || !this.puedeModificar(trabajador)) return;
     this.router.navigate(['/admin/editar-trabajador', id]);
   }
 
   eliminarTrabajador(id: number) {
+    const trabajador = this.trabajadores.find(t => t.id_trabajador === id);
+    if (!trabajador || !this.puedeModificar(trabajador)) return;
     if (!confirm('¿Estás seguro de que deseas eliminar este trabajador?')) {
       return;
     }
