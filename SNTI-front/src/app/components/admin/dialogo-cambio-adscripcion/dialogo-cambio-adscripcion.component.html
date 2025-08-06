@@ -1,0 +1,85 @@
+<h2 mat-dialog-title class="mb-3">Registrar Cambio de Adscripción</h2>
+<form [formGroup]="form" (ngSubmit)="enviarCambio()" class="p-2">
+
+  <!-- Trabajador -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Trabajador</mat-label>
+    <mat-select formControlName="id_trabajador" required>
+      <mat-option *ngFor="let t of trabajadores" [value]="t.id_trabajador">
+        {{ t.nombre }} {{ t.apellido_paterno }} {{ t.apellido_materno }} - ({{ t.adscripcion }})
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('id_trabajador')?.hasError('required')">Selecciona un trabajador</mat-error>
+  </mat-form-field>
+
+  <!-- Adscripción nueva -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Adscripción nueva</mat-label>
+    <mat-select formControlName="adscripcion_nueva" required>
+      <mat-option *ngFor="let ads of adscripciones" [value]="ads">{{ ads }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('adscripcion_nueva')?.hasError('required')">Selecciona la nueva adscripción</mat-error>
+  </mat-form-field>
+
+  <!-- Motivo -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Motivo</mat-label>
+    <textarea matInput rows="2" formControlName="motivo" maxlength="100"></textarea>
+    <mat-hint align="end">{{ form.value.motivo?.length || 0 }}/100</mat-hint>
+    <mat-error *ngIf="form.get('motivo')?.hasError('required')">Motivo obligatorio</mat-error>
+  </mat-form-field>
+
+  <!-- Fecha -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Fecha de cambio</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="fecha_cambio" required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="form.get('fecha_cambio')?.hasError('required')">Selecciona una fecha</mat-error>
+  </mat-form-field>
+
+  <!-- Archivo comprobatorio -->
+  <div class="file-zone" [class.dragging]="dragOverComp"
+       (dragover)="onDragOver($event, 'comprobatorio')" (dragleave)="onDragLeave($event, 'comprobatorio')" (drop)="onDrop($event, 'comprobatorio')">
+    <label>Documento Comprobatorio</label>
+    <div *ngIf="!archivoComprobatorio">
+      <mat-icon>cloud_upload</mat-icon>
+      <input type="file" (change)="onArchivoChange($event, 'comprobatorio')" accept=".pdf,.doc,.docx" />
+      <span>Arrastra y suelta o haz clic para seleccionar</span>
+    </div>
+    <div *ngIf="archivoComprobatorio" class="file-preview">
+      <mat-icon>insert_drive_file</mat-icon>
+      <span>{{ archivoComprobatorio.name }}</span>
+      <button mat-icon-button color="warn" type="button" (click)="removeFile('comprobatorio')">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Archivo nombramiento -->
+  <div class="file-zone" [class.dragging]="dragOverNom"
+       (dragover)="onDragOver($event, 'nombramiento')" (dragleave)="onDragLeave($event, 'nombramiento')" (drop)="onDrop($event, 'nombramiento')">
+    <label>Documento Nombramiento</label>
+    <div *ngIf="!archivoNombramiento">
+      <mat-icon>cloud_upload</mat-icon>
+      <input type="file" (change)="onArchivoChange($event, 'nombramiento')" accept=".pdf,.doc,.docx" />
+      <span>Arrastra y suelta o haz clic para seleccionar</span>
+    </div>
+    <div *ngIf="archivoNombramiento" class="file-preview">
+      <mat-icon>insert_drive_file</mat-icon>
+      <span>{{ archivoNombramiento.name }}</span>
+      <button mat-icon-button color="warn" type="button" (click)="removeFile('nombramiento')">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="acciones-modal">
+    <button mat-button mat-dialog-close type="button">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !archivoComprobatorio || !archivoNombramiento || loading">
+      <mat-icon *ngIf="!loading">upload</mat-icon>
+      <mat-spinner *ngIf="loading" diameter="22"></mat-spinner>
+      Registrar
+    </button>
+  </div>
+</form>

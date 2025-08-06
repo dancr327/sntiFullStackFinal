@@ -1,0 +1,244 @@
+<div class="registro-container">
+  <h2 class="registro-title" *ngIf="!trabajadorEdit">Registro de Trabajador</h2>
+  <h2 class="registro-title" *ngIf="trabajadorEdit">Editar trabajador</h2>
+  <form class="registro-form" [formGroup]="formEmpleado" (ngSubmit)="onSubmit()">
+    <!-- MENSAJES DE ALERTA -->
+    <div *ngIf="mensajeExito" class="alert alert-success">{{ mensajeExito }}</div>
+    <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
+
+    <!-- ============ DATOS DE ACCESO ============ -->
+    <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 8px;">
+      <small style="font-weight: 700; color: #007bff">Datos de acceso</small>
+    </div>
+    <div formGroupName="emailGroup">
+      <div class="form-group">
+        <label>Email (será el identificador)</label>
+        <input type="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com" autocomplete="off">
+        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          <small *ngIf="email?.errors?.['required']">El email es obligatorio.</small>
+          <small *ngIf="email?.errors?.['email']">Formato de email inválido.</small>
+        </div>
+        <small *ngIf="mensajeErroresCampos['email']" class="text-danger">{{ mensajeErroresCampos['email'] }}</small>
+      </div>
+      <div class="form-group">
+        <label>Repite el Email</label>
+        <input type="email" class="form-control" formControlName="email2" placeholder="Repite el email" autocomplete="off">
+        <div *ngIf="email2?.invalid && (email2?.dirty || email2?.touched)">
+          <small *ngIf="email2?.errors?.['required']">Debes repetir el email.</small>
+        </div>
+        <div *ngIf="emailGroup?.errors?.['emailsNoCoinciden']">
+          <small>Los emails no coinciden.</small>
+        </div>
+        <small *ngIf="mensajeErroresCampos['identificador']" class="text-danger">{{ mensajeErroresCampos['identificador'] }}</small>
+      </div>
+    </div>
+
+    <div formGroupName="passwordGroup">
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" class="form-control" formControlName="contrasena" placeholder="Al menos 6 caracteres">
+        <div *ngIf="contrasena?.invalid && (contrasena?.dirty || contrasena?.touched)">
+          <small *ngIf="contrasena?.errors?.['required']">La contraseña es obligatoria.</small>
+          <small *ngIf="contrasena?.errors?.['minlength']">Mínimo 6 caracteres.</small>
+        </div>
+        <small *ngIf="mensajeErroresCampos['contrasena']" class="text-danger">{{ mensajeErroresCampos['contrasena'] }}</small>
+      </div>
+      <div class="form-group">
+        <label>Repite la Contraseña</label>
+        <input type="password" class="form-control" formControlName="contrasena2" placeholder="Repite la contraseña">
+        <div *ngIf="contrasena2?.invalid && (contrasena2?.dirty || contrasena2?.touched)">
+          <small *ngIf="contrasena2?.errors?.['required']">Debes repetir la contraseña.</small>
+        </div>
+        <div *ngIf="passwordGroup?.errors?.['passwordsNoCoinciden']">
+          <small>Las contraseñas no coinciden.</small>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Rol</label>
+      <select class="form-control" formControlName="rol">
+        <option value="USUARIO">Usuario</option>
+        <option value="ADMINISTRADOR">Administrador</option>
+      </select>
+      <small *ngIf="mensajeErroresCampos['rol']" class="text-danger">{{ mensajeErroresCampos['rol'] }}</small>
+    </div>
+
+    <!-- ============ DATOS PERSONALES ============ -->
+    <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 8px;">
+      <small style="font-weight: 700; color: #007bff">Datos personales</small>
+    </div>
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre" placeholder="Ej. Juan">
+      <small *ngIf="formEmpleado.get('nombre')?.invalid && (formEmpleado.get('nombre')?.dirty || formEmpleado.get('nombre')?.touched)">El nombre es obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['nombre']" class="text-danger">{{ mensajeErroresCampos['nombre'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Apellido Paterno</label>
+      <input type="text" class="form-control" formControlName="apellido_paterno" placeholder="Ej. Pérez">
+      <small *ngIf="formEmpleado.get('apellido_paterno')?.invalid && (formEmpleado.get('apellido_paterno')?.dirty || formEmpleado.get('apellido_paterno')?.touched)">El apellido paterno es obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['apellido_paterno']" class="text-danger">{{ mensajeErroresCampos['apellido_paterno'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Apellido Materno</label>
+      <input type="text" class="form-control" formControlName="apellido_materno" placeholder="Ej. Gómez">
+      <small *ngIf="formEmpleado.get('apellido_materno')?.invalid && (formEmpleado.get('apellido_materno')?.dirty || formEmpleado.get('apellido_materno')?.touched)">El apellido materno es obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['apellido_materno']" class="text-danger">{{ mensajeErroresCampos['apellido_materno'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Fecha de nacimiento</label>
+      <input type="date" class="form-control" formControlName="fecha_nacimiento">
+      <small *ngIf="formEmpleado.get('fecha_nacimiento')?.invalid && (formEmpleado.get('fecha_nacimiento')?.dirty || formEmpleado.get('fecha_nacimiento')?.touched)">Campo obligatorio. (AAAA-MM-DD)</small>
+      <small *ngIf="mensajeErroresCampos['fecha_nacimiento']" class="text-danger">{{ mensajeErroresCampos['fecha_nacimiento'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Sexo</label>
+      <select class="form-control" formControlName="sexo">
+        <option value="" disabled>Selecciona</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+      <small *ngIf="formEmpleado.get('sexo')?.invalid && (formEmpleado.get('sexo')?.dirty || formEmpleado.get('sexo')?.touched)">Campo obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['sexo']" class="text-danger">{{ mensajeErroresCampos['sexo'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>CURP</label>
+      <input type="text" class="form-control" formControlName="curp" maxlength="18" placeholder="18 caracteres">
+      <small *ngIf="formEmpleado.get('curp')?.invalid && (formEmpleado.get('curp')?.dirty || formEmpleado.get('curp')?.touched)">CURP inválido o incompleto.</small>
+      <small *ngIf="mensajeErroresCampos['curp']" class="text-danger">{{ mensajeErroresCampos['curp'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>RFC</label>
+      <input type="text" class="form-control" formControlName="rfc" maxlength="13" placeholder="13 caracteres">
+      <small *ngIf="formEmpleado.get('rfc')?.invalid && (formEmpleado.get('rfc')?.dirty || formEmpleado.get('rfc')?.touched)">RFC inválido o incompleto.</small>
+      <small *ngIf="mensajeErroresCampos['rfc']" class="text-danger">{{ mensajeErroresCampos['rfc'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Situación Sentimental</label>
+      <select class="form-control" formControlName="situacion_sentimental">
+        <option value="" disabled>Selecciona</option>
+        <option value="Soltero">Soltero(a)</option>
+        <option value="Casado">Casado(a)</option>
+        <option value="Divorciado">Divorciado(a)</option>
+        <option value="Viudo">Viudo(a)</option>
+        <option value="Union_Libre">Unión libre</option>
+      </select>
+      <small *ngIf="formEmpleado.get('situacion_sentimental')?.invalid && (formEmpleado.get('situacion_sentimental')?.dirty || formEmpleado.get('situacion_sentimental')?.touched)">Campo obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['situacion_sentimental']" class="text-danger">{{ mensajeErroresCampos['situacion_sentimental'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Número de hijos</label>
+      <input type="number" class="form-control" formControlName="numero_hijos" min="0" max="20" placeholder="Ej. 0">
+      <small *ngIf="formEmpleado.get('numero_hijos')?.invalid && (formEmpleado.get('numero_hijos')?.dirty || formEmpleado.get('numero_hijos')?.touched)">Campo obligatorio.</small>
+      <small *ngIf="mensajeErroresCampos['numero_hijos']" class="text-danger">{{ mensajeErroresCampos['numero_hijos'] }}</small>
+    </div>
+
+    <!-- ============ DATOS LABORALES ============ -->
+    <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 8px;">
+      <small style="font-weight: 700; color: #007bff">Datos laborales</small>
+    </div>
+    <div class="form-group">
+      <label>Número de empleado</label>
+      <input type="text" class="form-control" formControlName="numero_empleado" maxlength="10" placeholder="10 caracteres (Ej. EMP1234567)">
+      <small *ngIf="formEmpleado.get('numero_empleado')?.invalid && (formEmpleado.get('numero_empleado')?.dirty || formEmpleado.get('numero_empleado')?.touched)">Debe tener 10 caracteres exactos (Ej: EMP1234567).</small>
+      <small *ngIf="mensajeErroresCampos['numero_empleado']" class="text-danger">{{ mensajeErroresCampos['numero_empleado'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Número de plaza</label>
+      <input type="text" class="form-control" formControlName="numero_plaza" maxlength="8" placeholder="8 caracteres (Ej. PLZ12345)">
+      <small *ngIf="formEmpleado.get('numero_plaza')?.invalid && (formEmpleado.get('numero_plaza')?.dirty || formEmpleado.get('numero_plaza')?.touched)">Debe tener 8 caracteres exactos (Ej: PLZ12345).</small>
+      <small *ngIf="mensajeErroresCampos['numero_plaza']" class="text-danger">{{ mensajeErroresCampos['numero_plaza'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Fecha de ingreso</label>
+      <input type="date" class="form-control" formControlName="fecha_ingreso">
+      <small *ngIf="mensajeErroresCampos['fecha_ingreso']" class="text-danger">{{ mensajeErroresCampos['fecha_ingreso'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Fecha de ingreso al gobierno</label>
+      <input type="date" class="form-control" formControlName="fecha_ingreso_gobierno">
+      <small *ngIf="mensajeErroresCampos['fecha_ingreso_gobierno']" class="text-danger">{{ mensajeErroresCampos['fecha_ingreso_gobierno'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Nivel de puesto</label>
+      <input type="text" class="form-control" formControlName="nivel_puesto" maxlength="50" placeholder="Ej. Jefe de Departamento">
+      <small *ngIf="mensajeErroresCampos['nivel_puesto']" class="text-danger">{{ mensajeErroresCampos['nivel_puesto'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Nombre del puesto</label>
+      <input type="text" class="form-control" formControlName="nombre_puesto" maxlength="100">
+      <small *ngIf="mensajeErroresCampos['nombre_puesto']" class="text-danger">{{ mensajeErroresCampos['nombre_puesto'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Puesto INPI</label>
+      <input type="text" class="form-control" formControlName="puesto_inpi" maxlength="100">
+      <small *ngIf="mensajeErroresCampos['puesto_inpi']" class="text-danger">{{ mensajeErroresCampos['puesto_inpi'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Adscripción</label>
+      <input type="text" class="form-control" formControlName="adscripcion" maxlength="100">
+      <small *ngIf="mensajeErroresCampos['adscripcion']" class="text-danger">{{ mensajeErroresCampos['adscripcion'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Sección</label>
+      <select class="form-control" formControlName="id_seccion">
+        <option value="" disabled selected>Selecciona</option>
+        <option *ngFor="let s of secciones" [value]="s.id_seccion">
+          {{ s.estado.replaceAll('_', ' ') }} - {{ s.numero_seccion }} - {{ s.ubicacion }}
+        </option>
+      </select>
+      <small *ngIf="mensajeErroresCampos['id_seccion']" class="text-danger">{{ mensajeErroresCampos['id_seccion'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Plaza base</label>
+      <input type="text" class="form-control" formControlName="plaza_base" maxlength="10" placeholder="Ej. BASE00001">
+      <small *ngIf="mensajeErroresCampos['plaza_base']" class="text-danger">{{ mensajeErroresCampos['plaza_base'] }}</small>
+    </div>
+
+    <!-- ============ DATOS ESCOLARES ============ -->
+    <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 8px;">
+      <small style="font-weight: 700; color: #007bff">Datos escolares</small>
+    </div>
+    <div class="form-group">
+      <label>Nivel de estudios</label>
+      <input type="text" class="form-control" formControlName="nivel_estudios" maxlength="100" placeholder="Ej. Licenciatura">
+      <small *ngIf="mensajeErroresCampos['nivel_estudios']" class="text-danger">{{ mensajeErroresCampos['nivel_estudios'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>Institución de estudios</label>
+      <input type="text" class="form-control" formControlName="institucion_estudios" maxlength="200" placeholder="Ej. UNAM">
+      <small *ngIf="mensajeErroresCampos['institucion_estudios']" class="text-danger">{{ mensajeErroresCampos['institucion_estudios'] }}</small>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="certificado_estudios" /> ¿Presenta certificado de estudios?
+      </label>
+      <small *ngIf="formEmpleado.get('certificado_estudios')?.value">(Puedes adjuntar archivo opcional abajo)</small>
+      <input type="file" (change)="onFileChange($event)" accept=".pdf,.jpg,.png,.jpeg" [disabled]="!formEmpleado.get('certificado_estudios')?.value" />
+      <div *ngIf="certificadoNombre">Archivo: {{ certificadoNombre }}</div>
+      <small *ngIf="mensajeErroresCampos['certificado_estudios']" class="text-danger">{{ mensajeErroresCampos['certificado_estudios'] }}</small>
+    </div>
+
+    <!-- ============ BOTÓN ============ -->
+    <div class="form-actions">
+      <button type="submit"
+        *ngIf="!trabajadorEdit"
+        [disabled]="formEmpleado.invalid || loading"
+        [ngClass]="{
+          'btn-valido': formEmpleado.valid && !loading,
+          'btn-invalido': formEmpleado.invalid || loading
+        }">
+        {{ loading ? 'Registrando...' : 'Registrar' }}
+      </button>
+            <button type="submit"
+        *ngIf="trabajadorEdit"
+        [disabled]="formEmpleado.invalid || loading"
+        [ngClass]="{
+          'btn-valido': formEmpleado.valid && !loading,
+          'btn-invalido': formEmpleado.invalid || loading
+        }">
+        {{ loading ? 'Guardando cambios...' : 'Guardar cambios' }}
+      </button>
+    </div>
+  </form>
+</div>

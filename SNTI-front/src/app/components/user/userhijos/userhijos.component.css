@@ -1,0 +1,92 @@
+
+/* Colores y botones en tono azul para seguir la misma linea que admin */
+.bg-light-blue {
+  background-color: #74c0fc !important;
+}
+
+.btn-light-blue {
+  background-color: #74c0fc;
+  border-color: #74c0fc;
+  color: white;
+}
+
+.btn-light-blue:hover {
+  background-color: #4dabf7;
+  border-color: #4dabf7;
+  color: white;
+}
+
+/* Tabla y tarjetas */
+.table-hover tbody tr:hover {
+  background-color: rgba(116, 192, 252, 0.12);
+}
+
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+}
+
+.card-header h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.table-light-blue,
+.bg-light-blue.text-white,
+.table th,
+.table thead th {
+  background-color: #74c0fc !important;
+  color: #fff !important;
+  white-space: nowrap;
+}
+
+/* Contenedor principal */
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.875em;
+  font-weight: 500;
+  border-radius: 0.25rem;
+}
+
+.subtitle {
+  color: #74c0fc !important;
+  font-size:  1.3rem;
+  font-weight: 450;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0;
+  }
+
+  .col-md-3,
+  .col-md-9 {
+    width: 100%;
+    padding: 0;
+  }
+
+  .table-responsive {
+    font-size: 0.96rem;
+  }
+}
+
+/* Estilos para los modales para igualarlos al estilo de permisos */
+#hijoModal .modal-content,
+#detalleModal .modal-content {
+  font-size: 1.16rem;
+}
+
+#hijoModal .modal-title,
+#hijoModal h6,
+#detalleModal .modal-title,
+#detalleModal h6 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}

@@ -1,0 +1,46 @@
+.btn-light-blue {
+  background-color: #4dabf7;
+  border-color: #4dabf7;
+  color: white;
+}
+
+.btn-light-blue:hover {
+  background-color: #339af0;
+  border-color: #339af0;
+  color: white;
+}
+
+/* Estilos adicionales */
+.table-hover tbody tr:hover {
+  background-color: rgba(77, 171, 247, 0.1);
+}
+
+.modal-content {
+  border: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+  /* Contenedor del contenido */
+  .main-content-wrapper {
+    display: flex;
+    flex: 1; /* Ocupa todo el espacio disponible */
+  }
+  
+  /* Barra lateral */
+  .sidebar {
+    width: 250px; /* Ancho de la barra */
+
+    position: sticky;
+    top: auto; /* Igual que la altura del header */
+    height: calc(150vh - 60px - 60px); /* 100vh - header - footer */
+    overflow-y: auto; /* Scroll si el contenido es largo */
+    flex-shrink: 0; /* Evita que se encoja */
+    padding: 1px 0;
+  }
+  

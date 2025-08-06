@@ -1,0 +1,156 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Lista de Trabajadores</h3>
+    </div>
+    <div class="card-body">
+      <!-- Filtros y buscador -->
+      <form class="row gy-2 gx-3 align-items-center mb-3 filtros-form">
+        <div class="col-12 col-md-4">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar trabajador..."
+            [(ngModel)]="filtroBusqueda"
+            (input)="filtrarTrabajadores()"
+            name="busqueda"
+            autocomplete="off"
+          />
+        </div>
+        <div class="col-12 col-md-3">
+          <select
+            class="form-select"
+            [(ngModel)]="filtroEstado"
+            (change)="onCambioEstado()"
+            name="estado"
+          >
+            <option [ngValue]="''">Todos los estados</option>
+            <option *ngFor="let estado of estadosUnicos" [ngValue]="estado">
+              {{ estado.replaceAll("_", " ") }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <select
+            class="form-select"
+            [(ngModel)]="filtroSeccion"
+            (change)="filtrarTrabajadores()"
+            name="seccion"
+          >
+            <option [ngValue]="''">Todas las secciones</option>
+            <option *ngFor="let s of seccionesFiltradasPorEstado" [ngValue]="s.id_seccion">
+              {{ s.numero_seccion }} - {{ s.estado.replaceAll("_", " ") }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2 text-md-end">
+          <button
+            class="btn btn-success w-100"
+            [routerLink]="['/admin/registroempleado']"
+          >
+            <i class="bi bi-plus-circle"></i> Nuevo Trabajador
+          </button>
+        </div>
+      </form>
+
+      <!-- Tabla principal de trabajadores -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th>Acciones</th>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Nombre puesto</th>
+              <th>Adscripción</th>
+              <th>Email</th>
+              <th>CURP</th>
+              <th>Num.Empleado</th>
+              <th>Num.Plaza</th>
+              <th>Sección</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of trabajadoresFiltrados; let i = index">
+              <td>
+                <button class="btn btn-sm btn-primary me-1" (click)="verTrabajador(t.id_trabajador)">
+                  <span class="material-icons">visibility</span>
+                </button>
+                <button class="btn btn-sm btn-warning me-1" (click)="editarTrabajador(t.id_trabajador)">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="eliminarTrabajador(t.id_trabajador)">
+                  <span class="material-icons">delete</span>
+                </button>
+              </td>
+              <td>{{ t.id_trabajador }}</td>
+              <td>
+                {{ t.nombre }} {{ t.apellido_paterno }}
+                {{ t.apellido_materno }}
+              </td>
+              <td>{{ t.nombre_puesto }}</td>
+              <td>{{ t.adscripcion }}</td>
+              <td>{{ t.email }}</td>
+              <td>{{ t.curp }}</td>
+              <td>{{ t.numero_empleado }}</td>
+              <td>{{ t.numero_plaza }}</td>
+              <td>
+                {{ t.seccion.numero_seccion }} - {{ t.seccion.estado.replaceAll("_", " ") }}
+              </td>
+            </tr>
+            <tr *ngIf="trabajadoresFiltrados.length === 0">
+              <td colspan="10" class="text-center">No se encontraron trabajadores</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Detalles del trabajador seleccionado -->
+      <div *ngIf="detalleTrabajador" class="card mt-4 detalle-card">
+        <div class="card-header bg-info text-white">
+          <h5>
+            Detalle de trabajador #{{ detalleTrabajador.id_trabajador }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            <li class="list-group-item"><b>Nombre:</b> {{ detalleTrabajador.nombre }} {{ detalleTrabajador.apellido_paterno }} {{ detalleTrabajador.apellido_materno }}</li>
+            <li class="list-group-item"><b>CURP:</b> {{ detalleTrabajador.curp }}</li>
+            <li class="list-group-item"><b>Email:</b> {{ detalleTrabajador.email }}</li>
+            <li class="list-group-item"><b>Fecha Nacimiento:</b> {{ detalleTrabajador.fecha_nacimiento | date : "yyyy-MM-dd" }}</li>
+            <li class="list-group-item"><b>Sexo:</b> {{ detalleTrabajador.sexo }}</li>
+            <li class="list-group-item"><b>RFC:</b> {{ detalleTrabajador.rfc }}</li>
+            <li class="list-group-item"><b>N° Empleado:</b> {{ detalleTrabajador.numero_empleado }}</li>
+            <li class="list-group-item"><b>N° Plaza:</b> {{ detalleTrabajador.numero_plaza }}</li>
+            <li class="list-group-item"><b>Puesto:</b> {{ detalleTrabajador.nombre_puesto }}</li>
+            <li class="list-group-item"><b>Puesto INPI:</b> {{ detalleTrabajador.puesto_inpi }}</li>
+            <li class="list-group-item"><b>Nivel Puesto:</b> {{ detalleTrabajador.nivel_puesto }}</li>
+            <li class="list-group-item"><b>Adscripción:</b> {{ detalleTrabajador.adscripcion }}</li>
+            <li class="list-group-item">
+              <b>Sección:</b>
+              Sección {{ detalleTrabajador.seccion.numero_seccion }} - {{ detalleTrabajador.seccion.estado.replaceAll("_", " ") }}
+              ({{ detalleTrabajador.seccion.ubicacion }})
+            </li>
+            <li class="list-group-item"><b>Nivel Estudios:</b> {{ detalleTrabajador.nivel_estudios }}</li>
+            <li class="list-group-item"><b>Institución:</b> {{ detalleTrabajador.institucion_estudios }}</li>
+            <li class="list-group-item">
+              <b>Certificado Estudios:</b>
+              <span [ngClass]="{'text-success': detalleTrabajador.certificado_estudios, 'text-danger': !detalleTrabajador.certificado_estudios}">
+                {{ detalleTrabajador.certificado_estudios ? "Sí" : "No" }}
+              </span>
+            </li>
+            <li class="list-group-item"><b>Situación Sentimental:</b> {{ detalleTrabajador.situacion_sentimental }}</li>
+            <li class="list-group-item"><b>N° Hijos:</b> {{ detalleTrabajador.numero_hijos }}</li>
+            <li class="list-group-item"><b>Fecha Ingreso:</b> {{ detalleTrabajador.fecha_ingreso | date : "yyyy-MM-dd" }}</li>
+            <li class="list-group-item"><b>Fecha Ingreso Gobierno:</b> {{ detalleTrabajador.fecha_ingreso_gobierno | date : "yyyy-MM-dd" }}</li>
+            <li class="list-group-item"><b>Rol:</b> {{ detalleTrabajador.rol }}</li>
+            <li class="list-group-item"><b>Fecha Actualización:</b> {{ detalleTrabajador.fecha_actualizacion | date : "yyyy-MM-dd HH:mm" }}</li>
+          </ul>
+          <button class="btn btn-secondary btn-sm mt-3" (click)="detalleTrabajador = null">
+            Cerrar detalle
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

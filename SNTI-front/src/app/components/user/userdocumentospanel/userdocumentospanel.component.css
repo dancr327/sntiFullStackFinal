@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  background-color: #f4f6f8; /* Un fondo gris claro para la página */
+}
+
+/* Tarjeta principal que contiene todo */
+.document-card {
+  padding: 1.5rem;
+}
+
+/* Ajustes para el botón de subir en el encabezado */
+mat-card-header button mat-icon {
+  margin-right: 8px;
+}
+@media (max-width: 576px) {
+  mat-card-header button span {
+    display: none; /* Oculta el texto en móviles para que solo quede el ícono */
+  }
+   mat-card-header button mat-icon {
+    margin-right: 0;
+  }
+}
+
+/* Estilos para el estado vacío */
+.empty-state {
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.empty-state-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #bdbdbd;
+}
+
+/* Estilos para la tabla */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.document-row {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.document-row:hover {
+  background-color: #f5f5f5;
+}
+
+mat-header-cell {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+}
+
+/* Centrar la columna de acciones */
+.text-center {
+  text-align: center;
+}

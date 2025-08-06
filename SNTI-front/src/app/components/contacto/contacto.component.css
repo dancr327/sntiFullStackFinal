@@ -1,0 +1,98 @@
+/* Reset básico para consistencia */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fondo principal y centrado vertical/horizontal */
+.contact-frame {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+
+}
+
+/* Contenedor de todas las tarjetas de contacto */
+.contact-container {
+  background: #fff;
+  padding: 40px 32px;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Título principal */
+.contact-title {
+  text-align: center;
+  font-size: 2.2rem;
+  color: black;
+  margin-bottom: 36px;
+  position: relative;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.contact-title i {
+  margin-right: 10px;
+  color: #2c5bff;
+}
+.contact-title::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 4px;
+  background-color: rgb(106, 205, 39);
+  margin: 14px auto 0;
+  border-radius: 2px;
+}
+
+/* Tarjeta individual de contacto */
+.contact-card {
+  padding: 24px 0;
+  border-bottom: 1.5px solid #e4e8ef;
+  transition: background 0.2s;
+}
+.contact-card:last-child {
+  border-bottom: none;
+}
+.contact-card:hover {
+  background: #f8faff;
+  border-radius: 14px;
+}
+
+/* Texto y detalles de cada contacto */
+.contact-card p {
+  font-size: 1.08rem;
+  margin-bottom: 7px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.contact-card strong {
+  color: rgb(106, 205, 39);
+  font-weight: 600;
+}
+.contact-card a {
+  color: #0069d9;
+  text-decoration: none;
+  font-weight: 500;
+}
+.contact-card a:hover {
+  text-decoration: underline;
+  color: #004aad;
+}
+
+/* Responsive para móvil */
+@media (max-width: 700px) {
+  .contact-container {
+    padding: 22px 4vw;
+  }
+  .contact-title {
+    font-size: 1.3rem;
+  }
+}

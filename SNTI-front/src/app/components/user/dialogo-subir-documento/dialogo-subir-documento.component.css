@@ -1,0 +1,37 @@
+/* Estilos para la zona de arrastrar y soltar */
+.drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+/* Estilo cuando un archivo se está arrastrando sobre la zona */
+.drop-zone.dragging {
+  border-color: #0d6efd; /* Color primario de Bootstrap */
+  background-color: #e9f5ff;
+}
+
+.drop-zone-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #0d6efd;
+}
+
+/* Estilos para la vista previa del archivo seleccionado */
+.file-preview {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Ajustes para los botones de acción del diálogo */
+mat-dialog-actions {
+  padding: 8px 24px;
+}
+
+/* Icono dentro del botón de subir */
+mat-dialog-actions button mat-icon {
+  margin-right: 8px;
+}

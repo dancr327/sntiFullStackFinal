@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TipoDocumento" ADD VALUE 'CERTIFICADO_CURSO';

@@ -1,0 +1,145 @@
+<div class="app-container">
+
+    
+  <div class="main-content-wrapper">
+<div class="container py-4">
+  <h2 class="mb-4 text-center fw-bold text-primary">
+    <i class="bi bi-exclamation-triangle me-2"></i>Mis Sanciones
+  </h2>
+
+  <!-- Resumen por estatus -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <span class="badge bg-danger mb-2" style="font-size:1.2em"><i class="bi bi-exclamation-circle me-1"></i>Activas</span>
+          <div class="display-5 fw-bold">{{ totalActivas }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <span class="badge bg-success mb-2" style="font-size:1.2em"><i class="bi bi-check-circle me-1"></i>Finalizadas</span>
+          <div class="display-5 fw-bold">{{ totalFinalizadas }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <span class="badge bg-warning text-dark mb-2" style="font-size:1.2em"><i class="bi bi-hourglass-split me-1"></i>Pendientes</span>
+          <div class="display-5 fw-bold">{{ totalPendientes }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros y recarga -->
+  <div class="row align-items-end mb-3 g-2">
+    <div class="col-12 col-md-6">
+      <label for="filtroEstatus" class="form-label fw-semibold">Filtrar por estatus:</label>
+      <select id="filtroEstatus" class="form-select" [(ngModel)]="filtroEstatus" (change)="filtrarSanciones()">
+        <option value="Todas">Todas</option>
+        <option value="Activa">Activas</option>
+        <option value="Finalizada">Finalizadas</option>
+        <option value="Pendiente">Pendientes</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-6 text-md-end">
+      <button class="btn btn-primary" (click)="recargarSanciones()">
+        <i class="bi bi-arrow-clockwise"></i> Recargar
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de sanciones -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Tipo</th>
+              <th>Descripción</th>
+              <th>Fecha Aplicación</th>
+              <th>Fecha Fin</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sancion of sancionesPaginadas">
+              <td>{{ sancion.tipo_sancion }}</td>
+              <td>{{ sancion.descripcion }}</td>
+              <td>{{ sancion.fecha_aplicacion | date:'dd/MM/yyyy' }}</td>
+              <td>{{ sancion.fecha_fin | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge px-3 py-2"
+                  [ngClass]="{
+                    'bg-danger': sancion.estatus === 'Activa',
+                    'bg-success': sancion.estatus === 'Finalizada' || sancion.estatus === 'Inactiva',
+                    'bg-warning text-dark': sancion.estatus === 'Pendiente'
+                  }">
+                  {{ sancion.estatus }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary" (click)="verDetalles(sancion)">
+                  <i class="bi bi-eye-fill"></i> Detalles
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="sancionesFiltradas.length === 0">
+              <td colspan="6" class="text-center">No se encontraron sanciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      Mostrando {{ sancionesPaginadas.length }} de {{ sancionesFiltradas.length }} sanciones
+    </div>
+    <div>
+      <button class="btn btn-sm btn-outline-secondary me-2" [disabled]="paginaActual === 1" (click)="paginaAnterior()">
+        <i class="bi bi-chevron-left"></i> Anterior
+      </button>
+      <span class="mx-2">Página {{ paginaActual }}</span>
+      <button class="btn btn-sm btn-outline-secondary" [disabled]="paginaActual * itemsPorPagina >= sancionesFiltradas.length" (click)="paginaSiguiente()">
+        Siguiente <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de detalles -->
+  <div class="modal fade" id="detalleSancionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="bi bi-info-circle me-2"></i>Detalles de Sanción</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" *ngIf="sancionSeleccionada">
+          <div class="mb-3">
+            <span class="badge bg-secondary">{{ sancionSeleccionada.estatus }}</span>
+          </div>
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item"><strong>Tipo:</strong> {{ sancionSeleccionada.tipo_sancion }}</li>
+            <li class="list-group-item"><strong>Descripción:</strong> {{ sancionSeleccionada.descripcion }}</li>
+            <li class="list-group-item"><strong>Fecha Aplicación:</strong> {{ sancionSeleccionada.fecha_aplicacion | date:'dd/MM/yyyy' }}</li>
+            <li class="list-group-item"><strong>Fecha Fin:</strong> {{ sancionSeleccionada.fecha_fin | date:'dd/MM/yyyy' }}</li>
+            <li class="list-group-item"><strong>Registrada por:</strong> {{ sancionSeleccionada.usuario_registro }}</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

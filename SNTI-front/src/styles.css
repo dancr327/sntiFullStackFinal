@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+    --azul-claro: #155d8f;
+    --azul-oscuro: #0f2b42;
+    --azul-cielo: #8bc8ee;
+    --blanco: #ffffff;
+    --amarillo: #ffee33;
+    --verde-pastel: #33ff62;
+    --gris: #dbe0dd ;
+  }
+  
+  :root {
+    --color-primario: #2A4365; /* Azul oscuro */
+    --color-secundario: #3182CE; /* Azul medio */
+    --color-accento: #E53E3E; /* Rojo coral */
+    --color-texto: #6dc1fa; /* Blanco humo */
+    --color-fondo: #a5cdf6; /* Gris claro */
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Diseño solo para banner-footer */
+.repeating-banner {
+  background-image: url('assets/images/banner-footer.jpg'); /* */
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  height: 65px; /* Ajusta la altura según sea necesario */
+}
+

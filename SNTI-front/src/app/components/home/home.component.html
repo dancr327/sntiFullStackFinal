@@ -1,0 +1,143 @@
+<section class="hero-section text-center text-white position-relative">
+  <div class="hero-bg"></div>
+  <div class="container d-flex flex-column justify-content-center h-100">
+    <div @fadeInUp>
+      <h1 class="hero-title display-4 fw-bold"></h1>
+      <p class="hero-subtitle lead mx-auto">
+        Fortaleciendo los derechos y el legado de los trabajadores indigenistas de México.
+        Somos la voz que defiende nuestra cultura y nuestro trabajo.
+      </p>
+      <a href="#acerca-de-nosotros" class="btn btn-primary btn-lg hero-cta">
+        Conoce Nuestra Historia <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="acerca-de-nosotros" class="about-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" @fadeInUp>
+        <img src="assets/images/snti-equipo-trabajo.jpg" 
+             class="img-fluid rounded-3 shadow-lg" 
+             alt="Miembros del Sindicato Nacional de Trabajadores Indigenistas reunidos">
+      </div>
+      <div class="col-lg-6" @fadeInUp>
+        <h2 class="section-title">Nuestro Legado</h2>
+        <p class="section-text">
+          Fundado sobre los pilares de la justicia y el respeto, el <strong>Sindicato Nacional de Trabajadores Indigenistas (SNTI)</strong> nació para ser el defensor incansable de los derechos laborales de quienes dedican su vida al servicio en el Instituto Nacional de los Pueblos Indígenas.
+        </p>
+        <p class="section-text">
+          Nuestra historia es un testimonio de perseverancia. Cada logro, desde la firma de condiciones generales de trabajo justas hasta la defensa de cada afiliado, ha sido forjado con la unidad y el compromiso de nuestra gente.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lucha-section">
+  <div class="container">
+    <div class="text-center mb-5" @fadeInUp>
+      <h2 class="section-title">Nuestra Lucha Diaria</h2>
+      <p class="lead text-muted mx-auto" style="max-width: 700px;">Nos centramos en tres áreas clave para garantizar el bienestar y progreso de nuestros afiliados.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 col-lg-4 d-flex align-items-stretch" @fadeInUp>
+        <div class="card lucha-card text-center">
+          <div class="card-body">
+            <div class="icon-circle mx-auto mb-4">
+              <i class="fas fa-balance-scale-left fa-2x"></i>
+            </div>
+            <h3 class="card-title">Defensa y Justicia Laboral</h3>
+            <p class="card-text">Vigilamos el cumplimiento de las Condiciones Generales de Trabajo y ofrecemos representación legal para proteger a cada miembro ante cualquier arbitrariedad.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 d-flex align-items-stretch" @fadeInUp>
+        <div class="card lucha-card text-center">
+          <div class="card-body">
+            <div class="icon-circle mx-auto mb-4">
+              <i class="fas fa-chart-line fa-2x"></i>
+            </div>
+            <h3 class="card-title">Crecimiento y Capacitación</h3>
+            <p class="card-text">Impulsamos programas de formación y desarrollo profesional que permiten a nuestros afiliados crecer, especializarse y alcanzar nuevas metas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 d-flex align-items-stretch" @fadeInUp>
+        <div class="card lucha-card text-center">
+          <div class="card-body">
+            <div class="icon-circle mx-auto mb-4">
+              <i class="fas fa-feather-alt fa-2x"></i>
+            </div>
+            <h3 class="card-title">Identidad y Cultura</h3>
+            <p class="card-text">Promovemos el respeto y la valoración de nuestras raíces culturales dentro del ámbito laboral, asegurando un entorno de trabajo inclusivo y digno.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="vision-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 order-lg-2" @fadeInUp>
+        <img src="assets/images/snti-vision-futuro.jpg" 
+             class="img-fluid rounded-3 shadow-lg" 
+             alt="Visión de futuro para el SNTI">
+      </div>
+      <div class="col-lg-6 order-lg-1" @fadeInUp>
+        <h2 class="section-title">Visión 2025: Un Futuro Sólido</h2>
+        <p class="section-text">
+          Miramos hacia 2025 con la meta clara de consolidarnos como un sindicato modelo en México. Nuestra estrategia se enfoca en la digitalización de servicios, la ampliación de convenios de colaboración y el fortalecimiento de nuestra presencia nacional.
+        </p>
+        <blockquote class="vision-quote">
+          <p class="mb-0">"Seremos un referente de transparencia, innovación y, sobre todo, de resultados tangibles para cada trabajador indigenista."</p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="equipo-nacional" class="equipo-section">
+  <div class="container">
+    
+    <div class="text-center position-relative mb-5">
+      <img src="assets/images/decoracion.png" alt="Nubes decorativas" class="nubes-decorativas">
+      
+      <h2 @fadeInDown class="section-title text-white pt-4">CEN y Comisiones Nacionales</h2>
+      <p @fadeInDown class="lead text-white-50 mx-auto" style="max-width: 700px;">
+        El equipo comprometido con la defensa de tus derechos.
+      </p>
+    </div>
+
+    <h3 class="equipo-subtitle" @fadeInUp>Comité Ejecutivo Nacional</h3>
+    
+    <div class="row g-4 justify-content-center">
+        <div *ngFor="let miembro of cen; trackBy: trackById" class="col-lg-4 col-md-6 d-flex align-items-stretch" @fadeInUp>
+        <div class="colaborador-card">
+          <h4 class="nombre">{{ miembro.nombre }}</h4>
+          <p class="cargo">{{ miembro.cargo }}</p>
+          <a [href]="'mailto:' + miembro.email" class="email">
+            <i class="fas fa-envelope me-2"></i>{{ miembro.email }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="equipo-subtitle mt-5" @fadeInUp>Comisiones Nacionales</h3>
+    <div class="row g-4 justify-content-center">
+        <div *ngFor="let miembro of cen; trackBy: trackById" class="col-xl-3 col-lg-4 col-md-6 d-flex align-items-stretch" @fadeInUp>
+        <div class="colaborador-card">
+          <h4 class="nombre">{{ miembro.nombre }}</h4>
+          <p class="cargo">{{ miembro.cargo }}</p>
+          <a [href]="'mailto:' + miembro.email" class="email">
+            <i class="fas fa-envelope me-2"></i>{{ miembro.email }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,76 @@
+<!-- src/app/components/galeria/galeria.component.html -->
+<div class="gallery-container container-fluid p-0">
+  
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner color="primary"></mat-spinner>
+    <p class="mt-3">Cargando Galería...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <section id="carouselGallery" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button *ngFor="let img of imagenesDestacadas; let i = index" 
+                type="button" 
+                [attr.data-bs-target]="'#carouselGallery'" 
+                [attr.data-bs-slide-to]="i" 
+                [class.active]="i === 0" 
+                [attr.aria-current]="i === 0 ? 'true' : 'false'"
+                [attr.aria-label]="'Slide ' + (i + 1)"></button>
+      </div>
+      <div class="carousel-inner">
+        <div *ngFor="let img of imagenesDestacadas; let i = index" class="carousel-item" [class.active]="i === 0">
+          <picture>
+            <source [srcset]="img.urlWebp" type="image/webp">
+            <source [srcset]="img.url" type="image/png">
+            <img [src]="img.url" class="d-block w-100" [alt]="img.alt">
+          </picture>
+          <div class="carousel-caption d-none d-md-block">
+            <h5>{{ img.title }}</h5>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselGallery" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselGallery" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </section>
+
+    <div class="container text-center my-5">
+      <h2 class="gallery-title">Nuestros Momentos</h2>
+      <p class="gallery-subtitle">Un recorrido visual por la historia y actividades de nuestro sindicato.</p>
+    </div>
+
+    <div class="container">
+      <div class="masonry-grid" [@listAnimation]="imagenesGaleria.length">
+        <div *ngFor="let imagen of imagenesGaleria; let i = index"
+             class="grid-item"
+             [ngClass]="getGridClass(imagen)"
+             (click)="abrirModal(i)">
+          
+          <div class="image-wrapper">
+            <picture>
+                <source [srcset]="imagen.urlWebp" type="image/webp">
+                <source [srcset]="imagen.url" type="image/png">
+                <img [src]="imagen.url" [alt]="imagen.alt" loading="lazy">
+            </picture>
+            <div class="overlay">
+              <div class="overlay-content">
+                <mat-icon>zoom_in</mat-icon>
+                <p>{{ imagen.title }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button mat-fab class="back-to-top" (click)="scrollToTop()" matTooltip="Volver arriba">
+      <mat-icon>arrow_upward</mat-icon>
+  </button>
+</div>

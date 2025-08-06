@@ -1,0 +1,268 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-light-blue text-white">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h4 class="mb-2 mb-md-0">
+          <i class="bi bi-exclamation-triangle me-2"></i>Registro de Sanciones
+        </h4>
+        <button
+          class="btn btn-light-blue"
+          data-bs-toggle="modal"
+          data-bs-target="#sancionModal"
+        >
+          <i class="bi bi-plus-circle me-2"></i>Nueva Sanción
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <form class="row gy-2 gx-3 align-items-center mb-3 filtros-form">
+        <div class="col-12 col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar sanciones..."
+              [(ngModel)]="filtroBusqueda"
+              (input)="filtrarSanciones()"
+              name="busqueda"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </form>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="bg-light-blue text-white">
+            <tr>
+              <th class="d-none d-md-table-cell">ID</th>
+              <th>Trabajador</th>
+              <th class="d-none d-sm-table-cell">Tipo</th>
+              <th class="d-none d-lg-table-cell">Fecha Aplicación</th>
+              <th class="d-none d-lg-table-cell">Fecha Fin</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sancion of sancionesFiltradas">
+              <td class="d-none d-md-table-cell">{{ sancion.id_sancion }}</td>
+              <td>
+                {{ sancion.trabajadores.nombre }} {{ sancion.trabajadores.apellido_paterno }}
+                {{ sancion.trabajadores.apellido_materno }}
+              </td>
+              <td class="d-none d-sm-table-cell">{{ sancion.tipo_sancion }}</td>
+              <td class="d-none d-lg-table-cell">
+                {{ sancion.fecha_aplicacion | date : "dd/MM/yyyy" }}
+              </td>
+              <td class="d-none d-lg-table-cell">
+                {{ sancion.fecha_fin | date : "dd/MM/yyyy" }}
+              </td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'bg-success': sancion.estatus === 'Inactiva',
+                    'bg-warning': sancion.estatus === 'Activa',
+                    'bg-secondary': sancion.estatus === 'Pendiente'
+                  }"
+                >
+                  {{ sancion.estatus }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex">
+                  <button
+                    class="btn btn-sm btn-light-blue me-2"
+                    (click)="verDetalles(sancion)"
+                    title="Ver detalles"
+                    data-bs-toggle="modal"
+                    data-bs-target="#detalleModal"
+                  >
+                    <span class="material-icons">visibility</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="sancionesFiltradas.length === 0">
+              <td colspan="7" class="text-center">No se encontraron sanciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nueva Sanción -->
+  <div class="modal fade" id="sancionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-light-blue text-white">
+          <h5 class="modal-title">Registrar Nueva Sanción</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="guardarSancion()" #sancionForm="ngForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Trabajador</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="nuevaSancion.id_trabajador"
+                  name="id_trabajador"
+                  required
+                >
+                  <option value="" disabled selected>
+                    Seleccionar trabajador
+                  </option>
+                  <option *ngFor="let trabajador of trabajadores" [value]="trabajador.id_trabajador">
+                    {{ trabajador.nombre }} {{ trabajador.apellido_paterno }} {{ trabajador.apellido_materno }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Tipo de Sanción</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="nuevaSancion.tipo_sancion"
+                  name="tipo_sancion"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Aplicación</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="nuevaSancion.fecha_aplicacion"
+                  name="fecha_aplicacion"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha Finalización</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="nuevaSancion.fecha_fin"
+                  name="fecha_fin"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Descripción</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                [(ngModel)]="nuevaSancion.descripcion"
+                name="descripcion"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Estatus</label>
+              <select
+                class="form-select"
+                [(ngModel)]="nuevaSancion.estatus"
+                name="estatus"
+                required
+              >
+                <option value="Activa">Activa</option>
+                <option value="Inactiva">Inactiva</option>
+                <option value="Pendiente">Pendiente</option>
+              </select>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                data-bs-dismiss="modal"
+              >Cancelar</button>
+              <button
+                type="submit"
+                class="btn btn-light-blue"
+                [disabled]="!sancionForm.valid"
+              >
+                <i class="bi bi-save me-2"></i>Guardar Sanción
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Detalles de la sanción -->
+  <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-light-blue text-white">
+          <h5 class="modal-title">Detalles de la Sanción</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="sancionSeleccionada">
+            <div class="mb-3">
+              <h6>Trabajador:</h6>
+              <p>
+                {{ sancionSeleccionada.trabajadores.nombre }}
+                {{ sancionSeleccionada.trabajadores.apellido_paterno }}
+                {{ sancionSeleccionada.trabajadores.apellido_materno }}
+              </p>
+            </div>
+            <div class="mb-3">
+              <h6>Tipo de Sanción:</h6>
+              <p>{{ sancionSeleccionada.tipo_sancion }}</p>
+            </div>
+            <div class="mb-3">
+              <h6>Descripción:</h6>
+              <p>{{ sancionSeleccionada.descripcion }}</p>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <h6>Fecha Aplicación:</h6>
+                <p>{{ sancionSeleccionada.fecha_aplicacion | date : "dd/MM/yyyy" }}</p>
+              </div>
+              <div class="col-md-6">
+                <h6>Fecha Fin:</h6>
+                <p>{{ sancionSeleccionada.fecha_fin | date : "dd/MM/yyyy" }}</p>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6>Estatus:</h6>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': sancionSeleccionada.estatus === 'Inactiva',
+                  'bg-warning': sancionSeleccionada.estatus === 'Activa',
+                  'bg-secondary': sancionSeleccionada.estatus === 'Pendiente'
+                }"
+              >
+                {{ sancionSeleccionada.estatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-light-blue"
+            data-bs-dismiss="modal"
+          >Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

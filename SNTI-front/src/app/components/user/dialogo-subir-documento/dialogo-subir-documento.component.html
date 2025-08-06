@@ -1,0 +1,53 @@
+<div class="p-3">
+  <h2 mat-dialog-title class="mb-3">Subir Nuevo Documento</h2>
+
+  <form [formGroup]="form" (ngSubmit)="subirDocumento()">
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Tipo de documento</mat-label>
+        <mat-select formControlName="tipo_documento" required (selectionChange)="onTipoChange()">
+          <mat-option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo.replace('_', ' ') | titlecase }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('tipo_documento')?.hasError('required')">
+          Debes seleccionar un tipo de documento.
+        </mat-error>
+      </mat-form-field>
+
+      <div
+        class="drop-zone text-center p-4 mb-3"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        [class.dragging]="isDragging"
+        *ngIf="!archivo">
+
+        <mat-icon class="drop-zone-icon">cloud_upload</mat-icon>
+        <p class="mb-1"><strong>Arrastra y suelta el archivo aquí</strong></p>
+        <p class="text-muted mb-2">o</p>
+        <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+          Selecciona un archivo
+        </button>
+        <input hidden type="file" #fileInput (change)="onArchivoChange($event)" />
+      </div>
+
+      <div *ngIf="archivo" class="file-preview d-flex align-items-center justify-content-between p-2 mb-3">
+        <div class="d-flex align-items-center">
+          <mat-icon class="me-2">insert_drive_file</mat-icon>
+          <span class="fw-bold">{{ archivo.name }}</span>
+        </div>
+        <button mat-icon-button color="warn" (click)="removeFile()" type="button" aria-label="Eliminar archivo">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close type="button">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !archivo || tipoYaExiste">
+        <mat-icon>upload</mat-icon>
+        Subir
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

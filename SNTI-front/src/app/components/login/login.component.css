@@ -1,0 +1,156 @@
+/* Contenedor principal con diseño de dos columnas */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    background: #f4f4f4;
+    padding: 40px;
+  }
+  
+/* diseño de titulo */
+  .login-title {
+    text-align: center;
+    font-size: 32px;
+    color: #333;
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  .login-title::after {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 4px;
+    background-color: #007bff;
+    margin: 10px auto 0 auto;
+    border-radius: 2px;
+  }
+
+  /* Lado izquierdo (logo) */
+  .login-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+  }
+  
+  .site-logo {
+    max-width: 80%;
+    height: auto;
+    border-radius: 12px;
+  }
+  
+  /* Lado derecho (formulario) */
+  .login-right {
+    flex: 1;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-right h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .login-right form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-right label {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #444;
+  }
+  
+  .login-right input {
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  /* .login-right button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-right button:hover {
+    background-color: #0056b3;
+  } */
+
+/* clase solo para centrar un label */
+  .label-center {
+    display: block;
+    text-align: center;
+  }
+  .label-center a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  /* Color de label con link*/
+  .label-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  /* Responsivo para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .login-container {
+      flex-direction: column;
+    }
+  
+    .login-left,
+    .login-right {
+      flex: unset;
+      width: 100%;
+    }
+  
+    .login-right {
+      margin-top: 30px;
+    }
+  }
+  
+  .btn-valido {
+    background-color: #007bff;
+    margin-top: 20px;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-valido:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilo para botón inválido */
+  .btn-invalido {
+    background-color: #cccccc;
+    margin-top: 20px;
+    color: #666666;
+    border: none;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: not-allowed; /*Caracteriritca para simbolo de bloqueado en cursor */
+    opacity: 0.7;
+    transition: background-color 0.3s ease;
+  }

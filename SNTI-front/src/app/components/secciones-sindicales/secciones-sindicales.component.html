@@ -1,0 +1,38 @@
+<div class="container">
+  <h2 class="contact-title">
+  Secciones Sindicales por Estado
+</h2>
+
+  <div class="accordion" id="seccionesAccordion">
+    <div *ngFor="let estado of seccionesKeys(); let idx = index" class="accordion-item">
+      <h2 class="accordion-header" id="heading{{ idx }}">
+        <button class="accordion-button collapsed bg-azul-cielo"
+                type="button" data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapse' + idx"
+                [attr.aria-expanded]="false"
+                [attr.aria-controls]="'collapse' + idx">
+          {{ estado.replaceAll('_', ' ') }}
+        </button>
+      </h2>
+      <div [id]="'collapse' + idx" class="accordion-collapse collapse"
+           [attr.aria-labelledby]="'heading' + idx" >
+        <div class="accordion-body">
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let seccion of seccionesPorEstado[estado]" class="list-group-item">
+              <span>
+                <span class="seccion-numero">Sección {{ seccion.numero_seccion }}</span>
+                <span class="seccion-ubicacion">{{ seccion.ubicacion }}</span>
+              </span>
+              <span>
+              <span *ngIf="seccion.secretario" class="seccion-secretario">
+                Secretario: 
+              </span>
+              <span class="seccion-ubicacion">{{ seccion.secretario }}</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+
+<div class="app-container">
+  <div class="main-content-wrapper">
+    <!-- <app-adminbarra class="sidebar"></app-adminbarra> -->
+    
+    <div class="container-fluid mt-3 mt-md-4 px-3 px-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light-blue text-white">
+          <h4 class="mb-0"><i class="bi bi-file-earmark-arrow-up me-2"></i>Gestor de Documentos</h4>
+        </div>
+        
+        <div class="card-body">
+          <!-- Botón para abrir modal -->
+          <button class="btn btn-light-blue mb-4 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#documentModal">
+            <i class="bi bi-cloud-arrow-up me-2"></i>Subir Documento
+          </button>
+          
+          <!-- Lista de documentos -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="bg-light-blue text-white">
+                <tr>
+                  <th>Nombre</th>
+                  <th class="d-none d-sm-table-cell">Tipo</th>
+                  <th class="d-none d-md-table-cell">Tamaño</th>
+                  <th class="d-none d-lg-table-cell">Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let doc of documentos">
+                  <td>
+                    <div class="d-flex flex-column">
+                      <span>{{doc.nombre}}</span>
+                      <small class="text-muted d-sm-none">{{doc.tipo}} • {{doc.tamanio}} KB</small>
+                      <small class="text-muted d-lg-none">{{doc.fecha | date:'dd/MM/yyyy'}}</small>
+                    </div>
+                  </td>
+                  <td class="d-none d-sm-table-cell">{{doc.tipo}}</td>
+                  <td class="d-none d-md-table-cell">{{doc.tamanio}} KB</td>
+                  <td class="d-none d-lg-table-cell">{{doc.fecha | date:'dd/MM/yyyy'}}</td>
+                  <td>
+                    <div class="d-flex">
+                      <button class="btn btn-sm btn-light-blue me-1 me-md-2" title="Descargar">
+                        <i class="bi bi-download"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="eliminarDocumento(doc.id)" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="documentos.length === 0">
+                  <td colspan="5" class="text-center">No hay documentos subidos</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para subir documentos -->
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-light-blue text-white">
+            <h5 class="modal-title">Subir Documento</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="subirDocumento()">
+              <div class="mb-3">
+                <label class="form-label">Nombre del documento</label>
+                <input type="text" class="form-control" [(ngModel)]="nuevoDocumento.nombre" name="nombre" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Seleccionar archivo</label>
+                <input type="file" class="form-control" (change)="onFileSelected($event)" required>
+              </div>
+              <div class="d-flex flex-column flex-sm-row justify-content-end">
+                <button type="button" class="btn btn-secondary mb-2 mb-sm-0 me-sm-2" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-light-blue">
+                  <i class="bi bi-upload me-2"></i>Subir
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

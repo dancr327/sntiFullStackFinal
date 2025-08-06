@@ -1,0 +1,88 @@
+.registro-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+  }
+  
+  .registro-title {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    position: relative;
+    margin-bottom: 30px;
+  }
+  
+  .registro-title::after {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 4px;
+    background-color: #007bff;
+    margin: 10px auto 0 auto;
+    border-radius: 2px;
+  }
+  
+  .registro-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #444;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+  .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  
+
+   /* Estilo para botón válido */
+.btn-valido {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-valido:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para botón inválido */
+.btn-invalido {
+  background-color: #cccccc;
+  color: #666666;
+  border: none;
+  padding: 12px 20px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transition: background-color 0.3s ease;
+}

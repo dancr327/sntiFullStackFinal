@@ -1,0 +1,67 @@
+<div class="login-container">
+  <div class="login-left">
+    <img src="assets/images/logosin.png" alt="Logo del sitio" class="site-logo" />
+  </div>
+  <div class="login-right">
+    <h2 class="login-title">Iniciar sesión</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Identificador (email o CURP) -->
+      <label for="identificador">Identificador</label>
+      <input
+        type="text"
+        id="identificador"
+        formControlName="identificador"
+        maxlength="150"
+        placeholder="Email institucional o CURP"
+        autocomplete="username"
+        [class.invalid-input]="loginForm.get('identificador')?.invalid && (loginForm.get('identificador')?.touched || loginForm.get('identificador')?.dirty)"
+      />
+      <div class="error" *ngIf="loginForm.get('identificador')?.invalid && (loginForm.get('identificador')?.touched || loginForm.get('identificador')?.dirty)">
+        <span *ngIf="loginForm.get('identificador')?.errors?.['required']">
+          *El identificador es obligatorio.
+        </span>
+        <span *ngIf="loginForm.get('identificador')?.errors?.['minlength']">
+          *Mínimo 3 caracteres.
+        </span>
+      </div>
+
+      <!-- Contraseña -->
+      <label for="contraseña">Contraseña</label>
+      <input
+        type="password"
+        id="contraseña"
+        formControlName="contraseña"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        [class.invalid-input]="loginForm.get('contraseña')?.invalid && (loginForm.get('contraseña')?.touched || loginForm.get('contraseña')?.dirty)"
+      />
+      <div class="error" *ngIf="loginForm.get('contraseña')?.invalid && (loginForm.get('contraseña')?.touched || loginForm.get('contraseña')?.dirty)">
+        <span *ngIf="loginForm.get('contraseña')?.errors?.['required']">
+          *La contraseña es obligatoria.
+        </span>
+        <span *ngIf="loginForm.get('contraseña')?.errors?.['minlength']">
+          *Debe tener al menos 6 caracteres.
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        [ngClass]="{
+          'btn-valido': loginForm.valid,
+          'btn-invalido': loginForm.invalid
+        }"
+      >
+        Entrar
+      </button>
+
+      <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+      <div class="label-center">
+        ¿Olvidaste tu contraseña?
+          Recupera aquí
+        
+      </div>
+    </form>
+  </div>
+</div>

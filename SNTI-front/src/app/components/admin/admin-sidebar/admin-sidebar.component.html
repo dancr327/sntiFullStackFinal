@@ -1,0 +1,227 @@
+<!-- Sidebar principal -->
+<div class="sidebar" [class.active]="sidebarActive">
+  <!-- Botón de cerrar, solo visible en móvil -->
+  <button
+    class="close-button d-lg-none"
+    (click)="closeSidebar.emit()"
+    style="position: absolute; top: 1rem; right: 1rem"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Ejemplo de usuario -->
+  <div class="user-info">
+  <div class="avatar-container">
+    <mat-icon class="avatar-icon">account_circle</mat-icon>
+  </div>
+  <div class="user-details">
+    <!-- Nombre completo del usuario -->
+    <h3 *ngIf="usuario as u">
+      {{ u.nombre }} {{ u.apellido_paterno }} {{ u.apellido_materno }}
+    </h3>
+    <p *ngIf="usuario as u">Rol {{ u.rol }}</p>
+  </div>
+</div>
+
+  <!-- Menú -->
+  <ul class="menu">
+    <!-- Administrar docuemntos -->
+    <!-- <li
+      class="menu-item"
+      [routerLink]="['admindocumentos']"
+      routerLinkActive="active"
+    >
+      <mat-icon>description</mat-icon>
+      <span class="menu-text">Documentos</span>
+    </li> -->
+
+    <!-- Ver y agregar Trabajadores -->
+    <li
+      class="menu-item"
+      [routerLink]="['admintrabajadores']"
+      routerLinkActive="active"
+    >
+      <mat-icon>groups</mat-icon>
+      <span class="menu-text">Trabajadores</span>
+    </li>
+
+    <!-- apartado de secretarias -->
+    <!-- <li class="nav-item mb-2">
+      <a
+        class="nav-link text-white d-flex align-items-center"
+        (click)="toggleSecretarias()"
+        [attr.aria-expanded]="secretariasAbiertas"
+      >
+        <span><mat-icon>account_balance</mat-icon></span>
+        <span class="ms-2">Secretarias</span>
+        <i
+          class="fas ms-auto"
+          [class.fa-angle-down]="!secretariasAbiertas"
+          [class.fa-angle-up]="secretariasAbiertas"
+        ></i>
+      </a>
+
+      <div class="collapse" [class.show]="secretariasAbiertas">
+        <ul class="nav flex-column ps-4">
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['trabajoconflictos']"
+              routerLinkActive="active"
+            >
+              <span><mat-icon>work</mat-icon></span>
+              <span class="ms-2"
+                >Secretaria de Trabajo, Conflictos y Acción Política</span
+              >
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['actasacuerdos']"
+              routerLinkActive="active"
+            >
+              <span> <mat-icon>meeting_room</mat-icon></span>
+              <span class="ms-2"
+                >Secretaria de Organización Actas y Acuerdos</span
+              >
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['finanzas']"
+              routerLinkActive="active"
+            >
+              <span><mat-icon>business</mat-icon></span>
+              <span class="ms-2">Secretaria de Finanzas</span>
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['prestaciones']"
+              routerLinkActive="active"
+            >
+              <span><mat-icon>handshake</mat-icon></span>
+              <span class="ms-2"
+                >Secretaria de Prestaciones Económicas, Fomento Deportivo,
+                Cultural y Previsión Social</span
+              >
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['escalafon']" 
+              routerLinkActive="active"
+            >
+              <span><mat-icon>account_tree</mat-icon></span>
+              <span class="ms-2">Secretaria de Escalafón</span>
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a
+              class="nav-link text-white d-flex align-items-center"
+              [routerLink]="['formacionC']" 
+              routerLinkActive="active"
+            >
+              <span><mat-icon>school</mat-icon></span>
+              <span class="ms-2"
+                >Secretaria de Formación y Capacitación sindical</span
+              >
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li> -->
+
+
+    <!-- Administrar Sanciones -->
+    <li
+      class="menu-item"
+      [routerLink]="['adminsanciones']"
+      routerLinkActive="active"
+    >
+      <mat-icon>gavel</mat-icon>
+      <span class="menu-text">Sanciones</span>
+    </li>
+
+    <!-- Administrar Permisos -->
+    <li
+      class="menu-item"
+      [routerLink]="['adminpermisos']"
+      routerLinkActive="active"
+    >
+      <mat-icon>assignment</mat-icon>
+      <span class="menu-text">Permisos</span>
+    </li>
+
+    <li
+      class="menu-item"
+      [routerLink]="['admincursos']"
+      routerLinkActive="active"
+    >
+      <mat-icon>school</mat-icon>
+      <span class="menu-text">Cursos</span>
+    </li>
+    
+    <!-- Administrar hijos -->
+    <li
+      class="menu-item"
+      [routerLink]="['adminhijos']"
+      routerLinkActive="active"
+    >
+      <mat-icon>child_care</mat-icon>
+      <span class="menu-text">Hijos</span>
+    </li>
+
+    <!--Administrar secciones  -->
+    <li
+      class="menu-item"
+      [routerLink]="['adminsecciones']"
+      routerLinkActive="active"
+    >
+      <mat-icon>location_city</mat-icon>
+      <span class="menu-text">Secciones</span>
+    </li>
+
+        <!--Administrar Contactos  -->
+    <li
+      class="menu-item"
+      [routerLink]="['admincontactos']"
+      routerLinkActive="active"
+    >
+      <mat-icon>add_call</mat-icon>
+      <span class="menu-text">Contactos</span>
+    </li>
+  </ul>
+
+  <!-- Botón de CAMBIOS ADSCRIPCION -->
+
+ <li
+  class="menu-item"
+  [routerLink]="['admincambiosadscripcion']"
+  routerLinkActive="active"
+>
+  <mat-icon>sync_alt</mat-icon>
+  <span class="menu-text">Cambios de Adscripción</span>
+</li>
+
+
+
+
+
+  <!-- Botón de cerrar sesión -->
+  <div class="logout menu-item">
+    <mat-icon>logout</mat-icon>
+    <span class="menu-text" (click)="logout()">Cerrar Sesión</span>
+  </div>
+</div>
+
+<!-- Overlay, solo si está activa -->
+<div
+  class="sidebar-overlay"
+  *ngIf="sidebarActive"
+  (click)="onOverlayClick()"
+></div>

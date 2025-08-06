@@ -1,0 +1,116 @@
+<div class="app-container">
+  <div class="main-content-wrapper">
+    <div class="container mt-5">
+      <div class="card shadow">
+        <div class="card-header bg-purple text-white">
+          <h3 class="mb-0">Mis Permisos</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive mb-5">
+            <table class="table table-hover">
+              <thead class="table-purple">
+                <tr>
+                  <th>Tipo</th>
+                  <th>Motivo</th>
+                  <th>Inicio</th>
+                  <th>Fin</th>
+                  <th>Estatus</th>
+                  <th>Documento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let permiso of permisosActivos">
+                  <td>{{ permiso.tipo_permiso }}</td>
+                  <td>{{ permiso.motivo }}</td>
+                  <td>{{ permiso.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+                  <td>{{ permiso.fecha_fin | date : "dd/MM/yyyy" }}</td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': permiso.estatus === 'Inactiva',
+                        'bg-warning': permiso.estatus === 'Activa',
+                        'bg-secondary': permiso.estatus === 'Pendiente'
+                      }"
+                    >
+                      {{ permiso.estatus }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      *ngIf="permiso.documentos"
+                      class="btn"
+                      (click)="descargarDocumento(permiso)"
+                    >
+                    <span class="material-icons">download</span>
+                      <i class="bi bi-download"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="permisosActivos.length === 0">
+                  <td colspan="6" class="text-center">
+                    No tienes permisos activos
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h5 class="mb-3 subtitle">Permisos Caducados</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-purple">
+                <tr>
+                  <th>Tipo</th>
+                  <th>Motivo</th>
+                  <th>Inicio</th>
+                  <th>Fin</th>
+                  <th>Estatus</th>
+                  <th>Documento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let permiso of permisosCaducados"
+                  class="table-danger"
+                >
+                  <td>{{ permiso.tipo_permiso }}</td>
+                  <td>{{ permiso.motivo }}</td>
+                  <td>{{ permiso.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+                  <td>{{ permiso.fecha_fin | date : "dd/MM/yyyy" }}</td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': permiso.estatus === 'Inactiva',
+                        'bg-warning': permiso.estatus === 'Activa',
+                        'bg-secondary': permiso.estatus === 'Pendiente'
+                      }"
+                    >
+                      {{ permiso.estatus }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      *ngIf="permiso.documentos"
+                      class="btn"
+                      (click)="descargarDocumento(permiso)"
+                    >
+                      <i class="bi bi-download"></i>
+                      <span class="material-icons">download</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="permisosCaducados.length === 0">
+                  <td colspan="6" class="text-center">
+                    No tienes permisos caducados
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

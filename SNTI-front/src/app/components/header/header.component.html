@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container">
+    <!-- Logo a la izquierda -->
+    <a class="navbar-brand" (click)="goHome()">
+      <img src="assets/images/SNTI.png" alt="Logo" class="logo">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/secciones-sindicales']" routerLinkActive="active">Secciones Sindicales</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/galeria']" routerLinkActive="active">Galería</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/mas-informacion']" routerLinkActive="active">Más Información</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/contacto']" routerLinkActive="active">Contáctanos</a>
+        </li>
+      </ul>
+      <!-- SOLO se muestra si NO está logueado -->
+      <a *ngIf="!authService.isLoggedIn()" class="btn btn-login ms-3" [routerLink]="['/login']">
+        Iniciar Sesión
+      </a>
+    </div>
+  </div>
+</nav>

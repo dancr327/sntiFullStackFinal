@@ -1,0 +1,19 @@
+/* Estructura principal */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 100% del viewport height */
+  }
+  
+  /* El contenido principal debe crecer */
+  .content {
+    flex: 1;
+  }
+  
+  /* Estilos del footer */
+  footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+  }

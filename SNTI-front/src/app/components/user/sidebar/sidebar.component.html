@@ -1,0 +1,65 @@
+<div class="sidebar-container">
+  <!-- Botón para toggle en móviles -->
+  <button class="sidebar-toggle d-lg-none" (click)="toggleSidebar()">
+    <i class="fas fa-bars"><mat-icon>list_alt</mat-icon></i>
+  </button>
+
+  <!-- Contenido del sidebar -->
+  <div class="sidebar" [class.active]="sidebarActive" >
+    <!-- Información de usuario -->
+    <div class="user-info">
+      <div class="avatar-container">
+        <mat-icon class="avatar-icon">account_circle</mat-icon>
+      </div>
+      <div class="user-details">
+        <h3>{{ usuario.nombre }}</h3>
+        <p>{{ usuario.rol }}</p>
+      </div>
+    </div>
+
+    <!-- Menú de navegación -->
+    <ul class="menu">
+      <!-- Ver Perfil -->
+      <li class="menu-item" [routerLink]="['/perfil']" routerLinkActive="active">
+        <mat-icon>edit</mat-icon>
+        <span class="menu-text">Mi perfil</span>
+      </li>
+      
+      <!-- Ver Permisos -->
+      <li class="menu-item" [routerLink]="['/userpermiso']" routerLinkActive="active">
+        <mat-icon>schedule</mat-icon>
+        <span class="menu-text">Mis permisos</span>
+      </li>
+      
+      <!-- Mis Sanciones -->
+      <li class="menu-item" [routerLink]="['/usersanciones']" routerLinkActive="active">
+        <mat-icon>warning</mat-icon>
+        <span class="menu-text">Mis Sanciones</span>
+      </li>
+
+            <!-- Mis Documentos -->
+      <li class="menu-item" [routerLink]="['/userdocumentos']" routerLinkActive="active">
+        <mat-icon>description</mat-icon>
+        <span class="menu-text">Mis Docuementos</span>
+      </li>
+
+      <!-- Mis SHijos -->
+      <li class="menu-item" [routerLink]="['/userhijos']" routerLinkActive="active">
+        <mat-icon>face</mat-icon>
+        <span class="menu-text">Mis Hijos</span>
+      </li>
+    
+
+    <li class = "menu-item" [routerLink]="['/mis-docuementos']" routerLinkActive="active">
+      <mat-icon>face</mat-icon>
+      <span class="menu-text">Panel Documentos</span>
+    </li>
+    </ul>
+
+    <!-- Cerrar Sesión -->
+    <div class="logout menu-item" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span class="menu-text">Cerrar Sesión</span>
+    </div>
+  </div>
+</div>

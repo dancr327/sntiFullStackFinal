@@ -1,0 +1,111 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(to right, #ffa333, #fc7537);
+  color: #fff;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+  transform: translateX(-100%);
+  transition: transform 0.45s cubic-bezier(.4,2.3,.3,1);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+}
+.sidebar.active {
+  transform: translateX(0);
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.22);
+  z-index: 150;
+}
+
+/* Layout usuario */
+.user-info {
+  text-align: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.avatar-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.avatar-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: white;
+}
+
+.menu {
+  list-style: none;
+  padding: 0; margin: 0 0 2rem 0;
+}
+.menu-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0.8rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+.menu-item.active, .menu-item:hover, .logout:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logout {
+  margin-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 20px 0 0;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.logout:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.close-button{
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 30%;
+}
+
+.user-details h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+  word-break: break-word;
+}
+.user-details p {
+  margin-bottom: 0;
+  font-size: 1rem;
+  color: #eee;
+}
+
+
+/* Desktop: sidebar siempre visible */
+@media (min-width: 992px) {
+  .sidebar {
+    transform: translateX(0);
+    z-index: 101;
+  }
+  .sidebar-overlay {
+    display: none;
+  }
+}

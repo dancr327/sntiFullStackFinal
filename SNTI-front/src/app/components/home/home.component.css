@@ -1,0 +1,231 @@
+/* home.component.css */
+
+/* Definición de la paleta de colores oficial del SNTI */
+:host {
+  --snti-azul-oscuro: #0A1931;
+  --snti-azul-profundo: #1A3D63;
+  --snti-azul-medio: #4A7FA7;
+  --snti-azul-claro: #B3CFE5;
+  --snti-fondo-suave: #F6FAFD;
+  --snti-texto-principal: #333;
+  --snti-blanco: #FFFFFF;
+  --section-padding: 6rem 0; /* Espaciado generoso para las secciones */
+}
+
+/* Estilos de Títulos y Textos Generales */
+.section-title {
+  font-family: 'Montserrat', sans-serif; /* Considera importar una fuente como Montserrat o Raleway */
+  color: var(--snti-azul-profundo);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.section-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--snti-texto-principal);
+}
+
+/* 1. Estilos para la Sección Hero */
+.hero-section {
+  background: linear-gradient(110deg, var(--snti-azul-oscuro) 0%, var(--snti-azul-profundo) 100%);
+  height: 80vh; /* Altura considerable para impacto visual */
+  min-height: 500px;
+  padding: 0 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('/assets/images/snti-equipo-trabajo.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 1;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  max-width: 650px;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+
+.hero-cta {
+  background-color: var(--snti-blanco);
+  color: var(--snti-azul-profundo);
+  border: none;
+  padding: 0.8rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.hero-cta:hover {
+  transform: translateY(-5px);
+  background-color: var(--snti-azul-claro);
+  color: var(--snti-azul-oscuro);
+}
+
+/* 2. Estilos para la Sección "Acerca de Nosotros" */
+.about-section {
+  padding: var(--section-padding);
+  background-color: var(--snti-blanco);
+}
+
+/* 3. Estilos para la Sección "Nuestra Lucha" */
+.lucha-section {
+  padding: var(--section-padding);
+  background-color: var(--snti-fondo-suave);
+}
+
+.lucha-card {
+  border: none;
+  border-radius: 15px;
+  background-color: var(--snti-blanco);
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
+  height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+}
+
+.lucha-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px -15px rgba(10, 25, 49, 0.2);
+}
+
+.lucha-card .icon-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: var(--snti-azul-medio);
+  color: var(--snti-blanco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.lucha-card:hover .icon-circle {
+  background-color: var(--snti-azul-oscuro);
+}
+
+.lucha-card .card-title {
+  color: var(--snti-azul-profundo);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.lucha-card .card-text {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* 4. Estilos para la Sección "Visión 2025" */
+.vision-section {
+  padding: var(--section-padding);
+  background-color: var(--snti-blanco);
+}
+
+.vision-quote {
+  border-left: 4px solid var(--snti-azul-claro);
+  padding-left: 1.5rem;
+  margin-top: 2rem;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--snti-azul-medio);
+}
+
+/* home.component.css */
+/* ... ESTILOS ANTERIORES ... */
+
+/* ============================================= */
+/* 5. Estilos para la Sección "Equipo Nacional"  */
+/* ============================================= */
+.equipo-section {
+  padding: var(--section-padding);
+  background-color: var(--snti-azul-profundo); /* Fondo oscuro para contraste */
+}
+
+.nubes-decorativas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px; /* Ancho de la imagen de nubes */
+  max-width: 90%;
+  opacity: 0.2; /* Sutilmente visible */
+  z-index: 1;
+}
+
+.equipo-section .section-title,
+.equipo-section .lead {
+  position: relative;
+  z-index: 2; /* Asegura que el texto esté sobre las nubes */
+}
+
+.equipo-subtitle {
+  font-weight: 600;
+  color: var(--snti-blanco);
+  border-bottom: 2px solid var(--snti-azul-medio);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.colaborador-card {
+  background: rgba(255, 255, 255, 0.05); /* Tarjeta traslúcida */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1.75rem;
+  width: 100%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.colaborador-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--snti-azul-claro);
+}
+
+.colaborador-card .nombre {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--snti-blanco);
+  margin-bottom: 0.5rem;
+}
+
+.colaborador-card .cargo {
+  font-size: 0.95rem;
+  color: var(--snti-azul-claro);
+  margin-bottom: 1.5rem;
+  min-height: 50px; /* Ayuda a alinear tarjetas con cargos de diferente longitud */
+}
+
+.colaborador-card .email {
+  font-size: 0.9rem;
+  color: var(--snti-blanco);
+  text-decoration: none;
+  word-break: break-all; /* Evita que emails largos rompan el layout */
+  transition: color 0.3s ease;
+}
+
+.colaborador-card .email:hover {
+  color: var(--snti-azul-claro);
+}
+
+.colaborador-card .email i {
+  color: var(--snti-azul-medio);
+}

@@ -1,0 +1,123 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Secciones Sindicales</h4>
+      <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#seccionModal">
+        <i class="bi bi-plus-circle me-2"></i>Nueva Sección
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover mb-0">
+          <thead class="table-primary">
+            <tr>
+              <th>#</th>
+              <th>Estado</th>
+              <th>Ubicación</th>
+              <th>Secretario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of secciones">
+              <td>{{ s.numero_seccion }}</td>
+              <td>{{ getEstadoNombre(s.estado) }}</td>
+              <td>{{ s.ubicacion }}</td>
+              <td>{{ s.secretario || '-' }}</td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" (click)="editar(s)">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="eliminarSeccion(s.id_seccion)">
+                  <span class="material-icons">delete</span>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="secciones.length === 0">
+              <td colspan="5" class="text-center">No hay secciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nueva Seccion -->
+<div class="modal fade" id="seccionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Nueva Sección</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form #secForm="ngForm" (ngSubmit)="guardarSeccion()">
+          <div class="mb-3">
+            <label class="form-label">Número de Sección</label>
+            <input type="number" class="form-control" [(ngModel)]="nuevaSeccion.numero_seccion" name="numero_seccion" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <select class="form-select" [(ngModel)]="nuevaSeccion.estado" name="estado" required>
+              <option value="" disabled selected>Seleccionar estado</option>
+              <option *ngFor="let e of estados" [value]="e">{{ getEstadoNombre(e) }}</option>
+              <option *ngFor="let e of estados" [value]="e">{{ getEstadoNombre(e) }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Ubicación</label>
+            <input type="text" class="form-control" [(ngModel)]="nuevaSeccion.ubicacion" name="ubicacion" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Secretario</label>
+            <input type="text" class="form-control" [(ngModel)]="nuevaSeccion.secretario" name="secretario" />
+          </div>
+          <div class="text-end">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!secForm.valid">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Editar Sección</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="seccionSeleccionada">
+        <form #editForm="ngForm" (ngSubmit)="actualizarSeccion()">
+          <div class="mb-3">
+            <label class="form-label">Número de Sección</label>
+            <input type="number" class="form-control" [(ngModel)]="seccionSeleccionada.numero_seccion" name="numero_seccion" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <select class="form-select" [(ngModel)]="seccionSeleccionada.estado" name="estado" required>
+              <option *ngFor="let e of estados" [value]="e">{{ getEstadoNombre(e) }}</option>
+              <option *ngFor="let e of estados" [value]="e">{{ getEstadoNombre(e) }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Ubicación</label>
+            <input type="text" class="form-control" [(ngModel)]="seccionSeleccionada.ubicacion" name="ubicacion" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Secretario</label>
+            <input type="text" class="form-control" [(ngModel)]="seccionSeleccionada.secretario" name="secretario" />
+          </div>
+          <div class="text-end">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

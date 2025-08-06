@@ -1,0 +1,87 @@
+/* Colores morados y botones */
+.bg-purple {
+  background-color: #74c0fc;
+}
+
+.btn {
+  background-color: #74c0fc;
+  color: white;
+  border-color: #74c0fc;
+}
+
+.btn:hover {
+  background-color: #74c0fc;
+  border-color: #74c0fc;
+  color: white;
+}
+
+.btn-outline {
+  color: #74c0fc;
+  border-color: #74c0fc;
+}
+
+.btn-outline:hover {
+  background-color: #74c0fc;
+  color: white;
+}
+
+/* Tabla y tarjetas */
+.table-hover tbody tr:hover {
+  background-color: rgba(116, 192, 252, 0.12);
+}
+
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+}
+
+.card-header h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.table-purple,
+.bg-purple.text-white,
+.table th,
+.table thead th {
+  background-color: #74c0fc !important;
+  color: #fff !important;
+  white-space: nowrap;
+}
+
+/* Contenedor principal */
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.875em;
+  font-weight: 500;
+  border-radius: 0.25rem;
+}
+
+.subtitle {
+  color: #74c0fc !important;
+  font-size:  1.3rem;
+  font-weight: 450;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0;
+  }
+
+  .col-md-3,
+  .col-md-9 {
+    width: 100%;
+    padding: 0;
+  }
+
+  .table-responsive {
+    font-size: 0.96rem;
+  }
+}

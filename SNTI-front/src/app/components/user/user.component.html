@@ -1,0 +1,35 @@
+<div class="app-container">
+
+
+  <!-- dealexandra -->
+    <!-- <div class="main-content-wrapper"> -->
+      <!-- <app-sidebar class="sidebar"></app-sidebar> -->
+      
+      <!-- <main class="content"> -->
+        <!-- <app-home></app-home> Usa router-outlet en lugar de app-home -->
+      <!-- </main> -->
+    <!-- </div> -->
+    
+
+    <!-- Botón de menú solo en móvil -->
+<button 
+  class="sidebar-toggle d-lg-none" 
+  (click)="toggleSidebar()" 
+  *ngIf="!sidebarActive">
+  <mat-icon>menu</mat-icon>
+</button>
+
+
+<!-- Sidebar superpuesta -->
+<app-daniel-sidebar
+  [sidebarActive]="sidebarActive"
+  (closeSidebar)="closeSidebar()"
+></app-daniel-sidebar>
+
+<!-- Contenido principal -->
+<div class="main-content">
+  <router-outlet>
+</router-outlet>
+</div>
+  
+  </div>

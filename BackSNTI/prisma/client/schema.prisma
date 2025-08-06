@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model auditoria {
+  id_auditoria     Int       @id @default(autoincrement())
+  tabla_afectada   String    @db.VarChar(100)
+  id_registro      Int
+  accion           String    @db.VarChar(10)
+  datos_anteriores Json?
+  datos_nuevos     Json?
+  usuario          String    @db.VarChar(100)
+  fecha_registro   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model cambiosadscripcion {
+  id_cambio             Int         @id @default(autoincrement())
+  id_trabajador         Int
+  adscripcion_anterior  String      @db.VarChar(100)
+  adscripcion_nueva     String      @db.VarChar(100)
+  fecha_cambio          DateTime    @db.Date
+  motivo                String
+  documento_respaldo_id Int?
+  usuario_registro      String?     @default(dbgenerated("CURRENT_USER")) @db.VarChar(100)
+  fecha_registro        DateTime?   @default(now()) @db.Timestamp(6)
+  documentos            documentos? @relation(fields: [documento_respaldo_id], references: [id_documento], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model cursos {
+  id_curso            Int                   @id @default(autoincrement())
+  codigo_curso        String                @unique @db.VarChar(20)
+  nombre_curso        String                @db.VarChar(255)
+  horas_duracion      Int
+  estatus             String?               @default("En curso") @db.VarChar(20)
+  trabajadores_cursos trabajadores_cursos[]
+}
+
+model documentos {
+  id_documento        Int                   @id @default(autoincrement())
+  id_trabajador       Int
+  tipo_documento      String                @db.VarChar(50)
+  metadata            Json?
+  hash_archivo        String                @db.VarChar(64)
+  nombre_archivo      String                @db.VarChar(255)
+  descripcion         String?
+  tipo_archivo        String?               @db.VarChar(10)
+  ruta_almacenamiento String
+  fecha_subida        DateTime?             @default(now()) @db.Timestamp(6)
+  tamano_bytes        BigInt
+  es_publico          Boolean?              @default(false)
+  cambiosadscripcion  cambiosadscripcion[]
+  hijos               hijos[]
+  permisos            permisos[]
+  trabajadores_cursos trabajadores_cursos[]
+
+  @@index([tipo_documento], map: "idx_documentos_tipo")
+}
+
+model hijos {
+  id_hijo            Int         @id @default(autoincrement())
+  id_trabajador      Int
+  nombre_completo    String      @db.VarChar(255)
+  fecha_nacimiento   DateTime    @db.Date
+  acta_nacimiento_id Int?
+  vigente            Boolean?    @default(true)
+  documentos         documentos? @relation(fields: [acta_nacimiento_id], references: [id_documento], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model permisos {
+  id_permiso              Int         @id @default(autoincrement())
+  id_trabajador           Int
+  tipo_permiso            String?     @db.VarChar(20)
+  fecha_inicio            DateTime    @db.Date
+  fecha_fin               DateTime    @db.Date
+  motivo                  String
+  estatus                 String?     @default("Pendiente") @db.VarChar(20)
+  documento_aprobacion_id Int?
+  fecha_registro          DateTime?   @default(now()) @db.Timestamp(6)
+  documentos              documentos? @relation(fields: [documento_aprobacion_id], references: [id_documento], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model sanciones {
+  id_sancion       Int          @id @default(autoincrement())
+  id_trabajador    Int
+  tipo_sancion     String       @db.VarChar(50)
+  descripcion      String
+  fecha_aplicacion DateTime     @db.Date
+  fecha_fin        DateTime?    @db.Date
+  estatus          String?      @default("No") @db.VarChar(20)
+  usuario_registro String?      @default(dbgenerated("CURRENT_USER")) @db.VarChar(100)
+  fecha_registro   DateTime?    @default(now()) @db.Timestamp(6)
+  trabajadores     trabajadores @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model secciones {
+  id_seccion     Int            @id @default(autoincrement())
+  nombre_seccion String         @db.VarChar(100)
+  descripcion    String?
+  trabajadores   trabajadores[]
+}
+
+model trabajadores {
+  id_trabajador          Int                   @id @default(autoincrement())
+  nombre                 String                @db.VarChar(100)
+  apellido_paterno       String                @db.VarChar(100)
+  apellido_materno       String?               @db.VarChar(100)
+  fecha_nacimiento       DateTime              @db.Date
+  sexo                   String                @db.Char(1)
+  curp                   String                @unique @db.Char(18)
+  rfc                    String                @unique @db.Char(13)
+  email                  String                @unique @db.VarChar(150)
+  situacion_sentimental  String?               @db.VarChar(20)
+  numero_hijos           Int                   @default(0)
+  numero_empleado        String                @unique @db.Char(10)
+  numero_plaza           String                @unique @db.Char(8)
+  fecha_ingreso          DateTime              @db.Date
+  fecha_ingreso_gobierno DateTime              @db.Date
+  nivel_puesto           String                @db.VarChar(50)
+  nombre_puesto          String                @db.VarChar(100)
+  puesto_inpi            String?               @db.VarChar(100)
+  adscripcion            String                @db.VarChar(100)
+  id_seccion             Int
+  nivel_estudios         String?               @db.VarChar(100)
+  institucion_estudios   String?               @db.VarChar(200)
+  certificado_estudios   Boolean?
+  plaza_base             String?               @db.VarChar(10)
+  fecha_actualizacion    DateTime?             @default(now()) @db.Timestamp(6)
+  sanciones              sanciones[]
+  seccion                secciones             @relation(fields: [id_seccion], references: [id_seccion], onDelete: NoAction, onUpdate: NoAction)
+  trabajadores_cursos    trabajadores_cursos[]
+}
+
+model trabajadores_cursos {
+  id_trabajador_curso Int          @id @default(autoincrement())
+  id_trabajador       Int
+  id_curso            Int
+  fecha_inscripcion   DateTime     @default(dbgenerated("CURRENT_DATE")) @db.Date
+  calificacion        Decimal?     @db.Decimal(5, 2)
+  completado          Boolean?     @default(false)
+  fecha_completado    DateTime?    @db.Date
+  certificado_id      Int?
+  documentos          documentos?  @relation(fields: [certificado_id], references: [id_documento], onDelete: NoAction, onUpdate: NoAction)
+  cursos              cursos       @relation(fields: [id_curso], references: [id_curso], onDelete: Cascade)
+  trabajadores        trabajadores @relation(fields: [id_trabajador], references: [id_trabajador], onDelete: Cascade)
+
+  @@unique([id_trabajador, id_curso], name: "trabajadores_cursos_unique", map: "trabajadores_cursos_unique")
+}
+
+model usuarios {
+  id_usuario             Int         @id @default(autoincrement())
+  id_trabajador          Int?        @unique
+  identificador          String      @unique @db.VarChar(150)
+  contraseña_hash       String      @db.VarChar(255)
+  intentos_fallidos      Int?        @default(0)
+  bloqueado              Boolean?    @default(false)
+  fecha_creacion         DateTime?   @default(now()) @db.Timestamp(6)
+  ultimo_login           DateTime?   @db.Timestamp(6)
+  ultimo_cambio_password DateTime?   @db.Timestamp(6)
+  rol                    rol_usuario @default(Empleado)
+
+  @@index([identificador], map: "idx_usuarios_identificador")
+}
+
+enum rol_usuario {
+  Administrador
+  Recursos_Humanos @map("Recursos Humanos")
+  Empleado
+}

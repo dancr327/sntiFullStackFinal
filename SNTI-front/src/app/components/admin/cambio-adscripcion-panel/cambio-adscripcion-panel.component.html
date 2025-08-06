@@ -1,0 +1,84 @@
+<div class="panel-container">
+  <div class="panel-header">
+    <h2 class="text-primary">Cambios de Adscripción</h2>
+    <button mat-raised-button color="primary" (click)="abrirDialogoNuevoCambio()">
+      <mat-icon>add</mat-icon>
+      Nuevo Cambio
+    </button>
+  </div>
+
+  <mat-table [dataSource]="cambios" class="mat-elevation-z8" *ngIf="cambios.length > 0 && !cargando">
+
+    <!-- Trabajador -->
+    <ng-container matColumnDef="trabajador">
+      <th mat-header-cell *matHeaderCellDef> Trabajador </th>
+      <td mat-cell *matCellDef="let cambio">
+        {{ cambio.trabajadores.nombre }} {{ cambio.trabajadores.apellido_paterno }} {{ cambio.trabajadores.apellido_materno }}
+      </td>
+    </ng-container>
+
+    <!-- Adscripción Anterior -->
+    <ng-container matColumnDef="adscripcion_anterior">
+      <th mat-header-cell *matHeaderCellDef> Adscripción Anterior </th>
+      <td mat-cell *matCellDef="let cambio">
+        {{ cambio.adscripcion_anterior }}
+      </td>
+    </ng-container>
+
+    <!-- Flecha Visual -->
+    <ng-container matColumnDef="flecha">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let cambio">
+        <mat-icon color="primary">arrow_forward</mat-icon>
+      </td>
+    </ng-container>
+
+    <!-- Adscripción Nueva -->
+    <ng-container matColumnDef="adscripcion_nueva">
+      <th mat-header-cell *matHeaderCellDef> Adscripción Nueva </th>
+      <td mat-cell *matCellDef="let cambio">
+        <span class="badge-nueva-adscripcion">{{ cambio.adscripcion_nueva }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Fecha Cambio -->
+    <ng-container matColumnDef="fecha_cambio">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let cambio">
+        {{ cambio.fecha_cambio | date:'mediumDate' }}
+      </td>
+    </ng-container>
+
+    <!-- Motivo -->
+    <ng-container matColumnDef="motivo">
+      <th mat-header-cell *matHeaderCellDef> Motivo </th>
+      <td mat-cell *matCellDef="let cambio">
+        <span matTooltip="{{ cambio.motivo }}">{{ cambio.motivo | slice:0:24 }}{{ cambio.motivo.length > 24 ? '...' : '' }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let cambio" class="acciones">
+        <button mat-icon-button color="primary" (click)="descargarDocumento(cambio, 'comprobatorio')" matTooltip="Descargar comprobatorio">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="descargarDocumento(cambio, 'nombramiento')" matTooltip="Descargar nombramiento">
+          <mat-icon>file_download</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarCambio(cambio)" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+
+  <mat-spinner *ngIf="cargando" diameter="40"></mat-spinner>
+  <div *ngIf="!cargando && cambios.length === 0" class="no-cambios">
+    <mat-icon>info</mat-icon> No hay cambios de adscripción registrados para tu sección.
+  </div>
+</div>

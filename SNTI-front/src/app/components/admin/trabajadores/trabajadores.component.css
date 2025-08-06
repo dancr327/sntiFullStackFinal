@@ -1,0 +1,56 @@
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.table th, .table thead th {
+  background-color: #0dadfd;
+  color: white;
+  white-space: nowrap;
+}
+
+.btn-primary, .btn-primary:hover {
+  background-color: #0dadfd;
+  border-color: #0dadfd;
+}
+
+.btn-success {
+  white-space: nowrap;
+}
+
+.table-responsive {
+  margin-top: 1rem;
+}
+
+.filtros-form .form-select,
+.filtros-form .form-control {
+  min-width: 120px;
+}
+
+/* Responsive: apila filtros y hace scroll horizontal en tabla en pantallas chicas */
+@media (max-width: 768px) {
+  .filtros-form > .col-md-4,
+  .filtros-form > .col-md-3,
+  .filtros-form > .col-md-2 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .btn-success {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .card-body {
+    padding: 1rem 0.3rem;
+  }
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+
+/* Detalle del trabajador: un poco más de espacio */
+.detalle-card .card-body {
+  padding: 1.25rem 0.8rem;
+}
+
+/* Elimina sidebar, main-content-wrapper, etc que no uses aquí */

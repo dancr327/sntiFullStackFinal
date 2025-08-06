@@ -1,0 +1,70 @@
+.bg-light-blue {
+  background-color: #74c0fc !important;
+}
+
+.btn-light-blue {
+  background-color: #74c0fc;
+  border-color: #74c0fc;
+  color: white;
+}
+
+.btn-light-blue:hover {
+  background-color: #4dabf7;
+  border-color: #4dabf7;
+  color: white;
+}
+
+/* Efecto hover en tabla */
+.table-hover tbody tr:hover {
+  background-color: rgba(116, 192, 252, 0.12);
+}
+
+.card, .modal-content {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+  border: none;
+}
+
+.badge.bg-warning { background-color: #ffc107 !important; color: #212529; }
+.badge.bg-success { background-color: #198754 !important; }
+.badge.bg-secondary { background-color: #6c757d !important; }
+
+.table th, .table thead th, .bg-light-blue.text-white {
+  background-color: #74c0fc !important;
+  color: #fff !important;
+  white-space: nowrap;
+}
+
+/* Responsive: apila filtros y tabla en móviles */
+.filtros-form .form-select,
+.filtros-form .form-control {
+  min-width: 120px;
+}
+@media (max-width: 768px) {
+  .filtros-form > .col-md-6,
+  .filtros-form > .col-md-3,
+  .filtros-form > .col-md-2 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .btn-light-blue, .btn-success {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .card-body {
+    padding: 1rem 0.3rem;
+  }
+  .table-responsive {
+    font-size: 0.96rem;
+  }
+}
+
+#detalleModal .modal-content, #permisoModal .modal-content {
+  font-size: 1.16rem;
+}
+#detalleModal .modal-title, #detalleModal h6,
+#permisoModal .modal-title, #permisoModal h6 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}

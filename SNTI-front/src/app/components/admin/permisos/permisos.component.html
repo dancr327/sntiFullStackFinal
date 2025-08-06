@@ -1,0 +1,460 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-light-blue text-white">
+      <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-center"
+      >
+        <h4 class="mb-2 mb-md-0">
+          <i class="bi bi-exclamation-triangle me-2"></i>Registro de Permisos
+        </h4>
+        <button
+          class="btn btn-light-blue"
+          data-bs-toggle="modal"
+          data-bs-target="#permisoModal"
+          (click)="prepararNuevoPermiso()"
+        >
+          <i class="bi bi-plus-circle me-2"></i>Nuevo Permiso
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- Buscador y Filtros -->
+      <form class="row gy-2 gx-3 align-items-center mb-3 filtros-form">
+        <div class="col-12 col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar permisos..."
+              [(ngModel)]="filtroBusqueda"
+              (input)="filtrarPermisos()"
+              name="busqueda"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+        <!-- filtro por estatus -->
+        <div class="col-12 col-md-3">
+          <select
+            class="form-select"
+            [(ngModel)]="filtroEstatus"
+            name="filtroEstatus"
+            (change)="filtrarPermisos()"
+          >
+            <option value="Todas">Todos</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Aprobado">Aprobado</option>
+            <option value="Denegado">Denegado</option>
+            <option value="NoSolicitado">NoSolicitado</option>
+          </select>
+        </div>
+        <!-- Puedes agregar más filtros aquí si lo requieres -->
+      </form>
+      <!-- Tabla de permisos activos -->
+      <div class="table-responsive mb-5">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="bg-light-blue text-white">
+            <tr>
+              <th class="d-none d-md-table-cell">ID</th>
+              <th>Trabajador</th>
+              <th class="d-none d-sm-table-cell">Tipo Permiso</th>
+              <th class="d-none d-lg-table-cell">Fecha Inicio</th>
+              <th class="d-none d-lg-table-cell">Fecha Fin</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let permiso of permisosActivosFiltrados">
+              <td class="d-none d-md-table-cell">{{ permiso.id_permiso }}</td>
+              <td>
+                {{ permiso.trabajadores.nombre }}
+                {{ permiso.trabajadores.apellido_paterno }}
+                {{ permiso.trabajadores.apellido_materno }}
+              </td>
+              <td class="d-none d-sm-table-cell">{{ permiso.tipo_permiso }}</td>
+              <td class="d-none d-lg-table-cell">
+                {{ permiso.fecha_inicio | date : "dd/MM/yyyy" : "UTC" }}
+              </td>
+              <td class="d-none d-lg-table-cell">
+                {{ permiso.fecha_fin | date : "dd/MM/yyyy" : "UTC" }}
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'bg-success': permiso.estatus === 'Aprobado',
+                    'bg-danger': permiso.estatus === 'Denegado',
+                    'bg-warning': permiso.estatus === 'NoSolicitado',
+                    'bg-secondary': permiso.estatus === 'Pendiente'
+                  }"
+                >
+                  {{ permiso.estatus }}
+                </span>
+              </td>
+              <td>
+          <!--BOTONES  -->
+                <div class="d-flex">
+                  <button
+                    class="btn btn-sm btn-light-blue me-2"
+                    (click)="verDetalles(permiso)"
+                    title="Ver detalles"
+                    data-bs-toggle="modal"
+                    data-bs-target="#detalleModal"
+                  >
+                    <span class="material-icons">visibility</span>
+                  </button>
+<!--  -->
+                        <button
+                    class="btn btn-sm btn-warning me-2"
+                    (click)="editarPermiso(permiso)"
+                    title="Editar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#permisoModal"
+                  >
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="eliminarPermiso(permiso.id_permiso)"
+                    title="Eliminar"
+                  >
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="permisosActivosFiltrados.length === 0">
+              <td colspan="7" class="text-center">No se encontraron permisos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+<!-- APARTADO PERMISOS CADUCADOS -->
+      <h5 class="mb-3 subtitle">Permisos Caducados</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="bg-light-blue text-white">
+            <tr>
+              <th class="d-none d-md-table-cell">ID</th>
+              <th>Trabajador</th>
+              <th class="d-none d-sm-table-cell">Tipo Permiso</th>
+              <th class="d-none d-lg-table-cell">Fecha Inicio</th>
+              <th class="d-none d-lg-table-cell">Fecha Fin</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let permiso of permisosCaducadosFiltrados" class="table-danger">
+              <td class="d-none d-md-table-cell">{{ permiso.id_permiso }}</td>
+              <td>
+                {{ permiso.trabajadores.nombre }}
+                {{ permiso.trabajadores.apellido_paterno }}
+                {{ permiso.trabajadores.apellido_materno }}
+              </td>
+              <td class="d-none d-sm-table-cell">{{ permiso.tipo_permiso }}</td>
+              <td class="d-none d-lg-table-cell">
+                {{ permiso.fecha_inicio | date : 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+              <td class="d-none d-lg-table-cell">
+                {{ permiso.fecha_fin | date : 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'bg-success': permiso.estatus === 'Aprobado',
+                    'bg-danger': permiso.estatus === 'Denegado',
+                    'bg-warning': permiso.estatus === 'NoSolicitado',
+                    'bg-secondary': permiso.estatus === 'Pendiente'
+                  }"
+                >
+                  {{ permiso.estatus }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex">
+                  <button
+                    class="btn btn-sm btn-light-blue me-2"
+                    (click)="verDetalles(permiso)"
+                    title="Ver detalles"
+                    data-bs-toggle="modal"
+                    data-bs-target="#detalleModal"
+                  >
+                    <span class="material-icons">visibility</span>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-warning me-2"
+                    (click)="editarPermiso(permiso)"
+                    title="Editar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#permisoModal"
+                  >
+                    <span class="material-icons">edit</span>
+                  </button>
+<!--  -->
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="eliminarPermiso(permiso.id_permiso)"
+                    title="Eliminar"
+                  >
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="permisosCaducadosFiltrados.length === 0">
+              <td colspan="7" class="text-center">
+                No se encontraron permisos
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- FIN APARTADO PERMISOS CADUCADOS -->
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Permiso -->
+  <div class="modal fade" id="permisoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-light-blue text-white">
+          <h5 class="modal-title">{{ editando ? 'Actualizar Permiso' : 'Registrar Nuevo Permiso' }}</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="guardarPermiso()" #permisoForm="ngForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Trabajador</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="nuevaPermiso.id_trabajador"
+                  name="id_trabajador"
+                  required
+                  [disabled]="editando"
+                >
+                  <option value="" disabled selected>
+                    Seleccionar trabajador
+                  </option>
+                  <option
+                    *ngFor="let trabajador of trabajadores"
+                    [value]="trabajador.id_trabajador"
+                  >
+                    {{ trabajador.nombre }} {{ trabajador.apellido_paterno }}
+                    {{ trabajador.apellido_materno }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Tipo Permiso</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="nuevaPermiso.tipo_permiso"
+                  name="tipo_permiso"
+                  required
+                >
+                  <option value="" disabled selected>Seleccionar tipo</option>
+                  <option value="Médica">Médica</option>
+                  <option value="Familiar">Familiar</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Inicio</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="nuevaPermiso.fecha_inicio"
+                  name="fecha_inicio"
+                  required
+                  [min]="minFechaInicio"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha Finalización</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="nuevaPermiso.fecha_fin"
+                  name="fecha_fin"
+                  required
+                  [min]="nuevaPermiso.fecha_inicio"
+                  [disabled]="!nuevaPermiso.fecha_inicio"
+                />
+              </div>
+            </div>
+            <div
+              *ngIf="fechaFinInvalida"
+              class="alert alert-danger mt-2"
+              role="alert"
+            >
+              La fecha de finalización no puede ser anterior a la fecha de
+              inicio.
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Motivo/Descripción</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                [(ngModel)]="nuevaPermiso.motivo"
+                name="motivo"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Estatus</label>
+              <select
+                class="form-select"
+                [(ngModel)]="nuevaPermiso.estatus"
+                name="estatus"
+                required
+              >
+                <option value="" disabled selected>Seleccionar estatus</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Denegado">Denegado</option>
+                <option value="NoSolicitado">NoSolicitado</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Documento que avala el permiso</label>
+              <input
+                type="file"
+                class="form-control"
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,.jpg,.png"
+                required
+                [required]="!editando"
+              />
+              <small class="text-muted"
+                >Formatos aceptados: PDF, DOC, DOCX, JPG, PNG</small
+              >
+            </div>
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-light-blue"
+                [disabled]="!permisoForm.valid || fechaFinInvalida"
+              >
+                {{ editando ? 'Actualizar Permiso' : 'Guardar Permiso' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Detalles del permiso -->
+  <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-light-blue text-white">
+          <h5 class="modal-title">Detalles del Permiso</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="permisoSeleccionado">
+            <div class="mb-3">
+              <h6>Trabajador:</h6>
+              <p>
+                {{ permisoSeleccionado.trabajadores.nombre }}
+                {{ permisoSeleccionado.trabajadores.apellido_paterno }}
+                {{ permisoSeleccionado.trabajadores.apellido_materno }}
+              </p>
+            </div>
+            <div class="mb-3">
+              <h6>Tipo Permiso:</h6>
+              <p>{{ permisoSeleccionado.tipo_permiso }}</p>
+            </div>
+            <div class="mb-3">
+              <h6>Motivo:</h6>
+              <p>{{ permisoSeleccionado.motivo }}</p>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <h6>Fecha Inicio:</h6>
+                <p>
+                  {{
+                    permisoSeleccionado.fecha_inicio
+                      | date : "dd/MM/yyyy" : "UTC"
+                  }}
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h6>Fecha Fin:</h6>
+                <p>
+                  {{
+                    permisoSeleccionado.fecha_fin | date : "dd/MM/yyyy" : "UTC"
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6>Estatus:</h6>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': permisoSeleccionado.estatus === 'Aprobado',
+                  'bg-danger': permisoSeleccionado.estatus === 'Denegado',
+                  'bg-warning': permisoSeleccionado.estatus === 'NoSolicitado',
+                  'bg-secondary': permisoSeleccionado.estatus === 'Pendiente'
+                }"
+              >
+                {{ permisoSeleccionado.estatus }}
+              </span>
+            </div>
+            <div class="mb-3">
+              <h6>Documento:</h6>
+              <ng-container *ngIf="permisoSeleccionado.documentos">
+                <a
+                  (click)="descargarDocumento(permisoSeleccionado)"
+                  class="btn btn-sm btn-light-blue"
+                >
+                  <i class="bi bi-download me-2"></i>
+                  {{
+                    permisoSeleccionado.documentos.nombre_archivo || "Descargar"
+                  }}
+                </a>
+              </ng-container>
+              <span *ngIf="!permisoSeleccionado.documentos" class="text-muted">
+                No hay documento
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-light-blue"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

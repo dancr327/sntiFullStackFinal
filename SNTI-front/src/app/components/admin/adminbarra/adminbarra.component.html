@@ -1,0 +1,109 @@
+
+
+<div class="sidebar-container">
+ 
+  <button class="sidebar-toggle d-lg-none" (click)="toggleSidebar()">
+    <i class="fas fa-bars"><mat-icon>list_alt</mat-icon></i>
+  </button>
+
+  <div class="sidebar" [class.active]="sidebarActive" 
+       >
+   <div class="user-info">
+      <div class="avatar-container">
+        <mat-icon class="avatar-icon">account_circle</mat-icon>
+      </div>
+      <div class="user-details">
+        <h3>{{ usuario.nombre }}</h3>
+        <p>{{ usuario.rol }}</p>
+      </div>
+    </div>
+  
+    
+    <ul class="nav flex-column px-3">
+     
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white d-flex align-items-center" routerLink="/documentos" routerLinkActive="active">
+          <mat-icon>description</mat-icon>
+          <span class="ms-2">Documentos</span>
+        </a>
+      </li>
+      
+      
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white d-flex align-items-center" routerLink="/trabajadores" routerLinkActive="active">
+          <mat-icon>groups</mat-icon>
+          <span class="ms-2">Trabajadores</span>
+        </a>
+      </li>
+      
+     
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white d-flex align-items-center" 
+           (click)="toggleSecretarias()"
+           [attr.aria-expanded]="secretariasAbiertas">
+          <span><mat-icon>account_balance</mat-icon></span>
+          <span class="ms-2">Secretarias</span>
+          <i class="fas ms-auto" [class.fa-angle-down]="!secretariasAbiertas" [class.fa-angle-up]="secretariasAbiertas"></i>
+        </a>
+        <div class="collapse" [class.show]="secretariasAbiertas">
+          <ul class="nav flex-column ps-4">
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/trabajoconflictos" routerLinkActive="active">
+                <span><mat-icon>work</mat-icon></span>
+                <span class="ms-2">Secretaria de Trabajo, Conflictos y Acción Política</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/actasacuerdos" routerLinkActive="active">
+               <span> <mat-icon>meeting_room</mat-icon></span>
+                <span class="ms-2">Secretaria de Organización Actas y Acuerdos</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/finanzas" routerLinkActive="active">
+                <span><mat-icon>business</mat-icon></span>
+                <span class="ms-2">Secretaria de Finanzas</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/prestaciones" routerLinkActive="active">
+                <span><mat-icon>handshake</mat-icon></span>
+                <span class="ms-2">Secretaria de Prestaciones Económicas, Fomento Deportivo, Cultural y Previsión Social</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/escalafon" routerLinkActive="active">
+                <span><mat-icon>account_tree</mat-icon></span>
+                <span class="ms-2">Secretaria de Escalafón</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a class="nav-link text-white d-flex align-items-center" routerLink="/formacionC" routerLinkActive="active">
+                <span><mat-icon>school</mat-icon></span>
+                <span class="ms-2">Secretaria de Formación y Capacitación sindical</span>
+              </a>
+            </li>
+          
+            
+          </ul>
+        </div>
+      </li>
+      
+     
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white d-flex align-items-center" routerLink="/sanciones" routerLinkActive="active">
+          <mat-icon>gavel</mat-icon>
+          <span class="ms-2">Sanciones</span>
+        </a>
+      </li>
+      
+     
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white d-flex align-items-center" routerLink="/permisos" routerLinkActive="active">
+          <mat-icon>assignment</mat-icon>
+          <span class="ms-2">Permisos</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+.selected {
+    background-color: #e3f2fd !important;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .mat-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .mat-row:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .text-success {
+    color: #28a745;
+  }
+  
+  .text-danger {
+    color: #dc3545;
+  }
+  
+  .text-muted {
+    color: #6c757d;
+  }
+  /* En tu archivo CSS/SCSS */
+  .purple-button {
+    background-color: #7b1fa2;
+    color: white;
+    border-radius: 20px;
+    min-width: 180px; /* Ancho mínimo */
+    
+    /* Centrado perfecto */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Espaciado interno */
+    padding: 0 24px;
+    
+    /* Transición suave */
+    transition: all 0.3s ease;
+    
+    /* Estilo para el icono */
+    .mat-icon {
+      margin-right: 8px;
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+    
+    &:hover {
+      background-color: #9c27b0;
+      transform: translateY(-1px);
+    }
+  }
+    
+  /* Contenedor del contenido */
+  .main-content-wrapper {
+    display: flex;
+    flex: 1; /* Ocupa todo el espacio disponible */
+  }
+  
+  /* Barra lateral */
+  .sidebar {
+    width: 250px; /* Ancho de la barra */
+
+    position: sticky;
+    top: auto; /* Igual que la altura del header */
+    height: calc(150vh - 60px - 60px); /* 100vh - header - footer */
+    overflow-y: auto; /* Scroll si el contenido es largo */
+    flex-shrink: 0; /* Evita que se encoja */
+    padding: 1px 0;
+  }
+  

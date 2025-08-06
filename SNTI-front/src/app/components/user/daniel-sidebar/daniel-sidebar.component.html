@@ -1,0 +1,74 @@
+<!-- Sidebar principal -->
+<div class="sidebar" [class.active]="sidebarActive">
+  <!-- Botón de cerrar, solo visible en móvil -->
+  <button
+    class="close-button d-lg-none"
+    (click)="closeSidebar.emit()"
+    style="position: absolute; top: 1rem; right: 1rem"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Ejemplo de usuario -->
+    <div class="user-info">
+  <div class="avatar-container">
+    <mat-icon class="avatar-icon">account_circle</mat-icon>
+  </div>
+  <div class="user-details">
+    <!-- Nombre completo del usuario -->
+    <h3 *ngIf="usuario as u">
+      {{ u.nombre }} {{ u.apellido_paterno }} {{ u.apellido_materno }}
+    </h3>
+    <p *ngIf="usuario as u">Rol {{ u.rol }}</p>
+  </div>
+</div>
+  <!-- Menú -->
+  <ul class="menu">
+    <li class="menu-item" [routerLink]="['userperfil']" routerLinkActive="active">
+      <mat-icon>edit</mat-icon>
+      <span class="menu-text">Mi perfil</span>
+    </li>
+
+    <!-- Ver Permisos -->
+      <li class="menu-item" [routerLink]="['userpermiso']" routerLinkActive="active">
+        <mat-icon>schedule</mat-icon>
+        <span class="menu-text">Mis permisos</span>
+      </li>
+      
+      <!-- Mis Sanciones -->
+      <li class="menu-item" [routerLink]="['usersanciones']" routerLinkActive="active">
+        <mat-icon>warning</mat-icon>
+        <span class="menu-text">Mis Sanciones</span>
+      </li>
+
+       <!-- Mis Documentos -->
+<li class="menu-item" [routerLink]="['userdocumentospanel']" routerLinkActive="active">
+  <mat-icon>description</mat-icon>
+  <span class="menu-text">Mis Documentos</span>
+</li>
+
+
+      <!-- Mis SHijos -->
+      <li class="menu-item" [routerLink]="['userhijos']" routerLinkActive="active">
+        <mat-icon>face</mat-icon>
+        <span class="menu-text">Mis Hijos</span>
+      </li>
+
+ <li class="menu-item" [routerLink]="['usercursos']" routerLinkActive="active">
+      <mat-icon>school</mat-icon>
+      <span class="menu-text">Mis Cursos</span>
+    </li>
+  </ul>
+  
+  <div class="logout menu-item">
+      <mat-icon>logout</mat-icon>
+      <span class="menu-text" (click)="logout()">Cerrar Sesión</span>
+    </div>
+</div>
+
+<!-- Overlay, solo si está activa -->
+<div
+  class="sidebar-overlay"
+  *ngIf="sidebarActive"
+  (click)="onOverlayClick()"
+></div>

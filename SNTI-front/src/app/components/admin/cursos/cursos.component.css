@@ -1,0 +1,56 @@
+.bg-light-blue {
+  background-color: #74c0fc !important;
+}
+.btn-primary, .btn-primary:hover {
+  background-color: #0dadfd;
+  border-color: #0dadfd;
+}
+
+.btn-light-blue {
+  background-color: #74c0fc;
+  border-color: #74c0fc;
+  color: white;
+}
+
+.btn-light-blue:hover {
+  background-color: #4dabf7;
+  border-color: #4dabf7;
+  color: white;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(116, 192, 252, 0.12);
+}
+
+.card,
+.modal-content {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+}
+
+.table th,
+.table thead th {
+  color: black !important;
+  white-space: nowrap;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+#detalleModal .modal-content,
+#editarModal .modal-content,
+#agregarModal .modal-content,
+#cursoModal .modal-content {
+  font-size: 1.16rem;
+}
+
+#detalleModal .modal-title,
+#editarModal .modal-title,
+#agregarModal .modal-title,
+#cursoModal .modal-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
