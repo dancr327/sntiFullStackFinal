@@ -35,7 +35,7 @@ const authMiddleware = require('./middleware/auth'); // Ajusta la ruta si es nec
 // Inicializar app y prisma
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.PORT ||4000;
+const PORT = process.env.PORT ||3000;
 
 // Configuración de Swagger
 const swaggerOptions = {

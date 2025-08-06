@@ -21,7 +21,12 @@ export class SancionesService {
     return this.http.get<{ success: boolean; data: Sancion[] }>(`${this.apiUrl}/trabajador/${id}`);
   }
 
-  getMisSanciones(): Observable<{ success: boolean; data: Sancion[] }> {
-    return this.http.get<{ success: boolean; data: Sancion[] }>(`${this.apiUrl}/mi-sancion`);
+  getMisSanciones(estatus?: string): Observable<{ success: boolean; data: Sancion[] }> {
+    const params = estatus && estatus !== 'Todas' ? { params: { estatus } } : {};
+    return this.http.get<{ success: boolean; data: Sancion[] }>(`${this.apiUrl}/mi-sancion`, params);
+  } // Obtener sanciones del usuario autenticado, (pequeño cambio en el endpoint Hecho por Daniel)
+
+  eliminarSancion(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

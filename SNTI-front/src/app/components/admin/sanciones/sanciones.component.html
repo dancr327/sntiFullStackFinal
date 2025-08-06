@@ -29,6 +29,19 @@
             />
           </div>
         </div>
+        <div class="col-12 col-md-3">
+          <select
+            class="form-select"
+            [(ngModel)]="filtroEstatus"
+            name="filtroEstatus"
+            (change)="filtrarSanciones()"
+          >
+            <option value="Todas">Todos</option>
+            <option value="Activa">Activa</option>
+            <option value="Inactiva">Inactiva</option>
+            <option value="Pendiente">Pendiente</option>
+          </select>
+        </div>
       </form>
       <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle mb-0">
@@ -44,24 +57,26 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let sancion of sancionesFiltradas">
+            <tr *ngFor="let sancion of sancionesActivasFiltradas">
               <td class="d-none d-md-table-cell">{{ sancion.id_sancion }}</td>
               <td>
-                {{ sancion.trabajadores.nombre }} {{ sancion.trabajadores.apellido_paterno }}
-                {{ sancion.trabajadores.apellido_materno }}
+                <div class="d-flex flex-column">
+                  <span class="fw-bold d-sm-none">ID: {{sancion.id_sancion}}</span>
+                      {{sancion.trabajadores.nombre}} {{sancion.trabajadores.apellido_paterno}} {{sancion.trabajadores.apellido_materno}}
+                </div>
               </td>
               <td class="d-none d-sm-table-cell">{{ sancion.tipo_sancion }}</td>
               <td class="d-none d-lg-table-cell">
-                {{ sancion.fecha_aplicacion | date : "dd/MM/yyyy" }}
+                {{ sancion.fecha_aplicacion | date : "dd/MM/yyyy":"UTC" }}
               </td>
               <td class="d-none d-lg-table-cell">
-                {{ sancion.fecha_fin | date : "dd/MM/yyyy" }}
+                {{ sancion.fecha_fin | date : "dd/MM/yyyy":"UTC" }}
               </td>
               <td>
                 <span class="badge"
                   [ngClass]="{
-                    'bg-success': sancion.estatus === 'Inactiva',
-                    'bg-warning': sancion.estatus === 'Activa',
+                    'bg-success': sancion.estatus === 'Activa',
+                    'bg-warning': sancion.estatus === 'Inactiva',
                     'bg-secondary': sancion.estatus === 'Pendiente'
                   }"
                 >
@@ -79,10 +94,72 @@
                   >
                     <span class="material-icons">visibility</span>
                   </button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminarSancion(sancion.id_sancion)" title="Eliminar">
+                        <span class="material-icons">delete</span>
+                      </button>
                 </div>
               </td>
             </tr>
-            <tr *ngIf="sancionesFiltradas.length === 0">
+            <tr *ngIf="sancionesActivasFiltradas.length === 0">
+              <td colspan="7" class="text-center">No se encontraron sanciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+<h5 class="mb-3 subtitle">Sanciones Caducadas</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead class="bg-light-blue text-white">
+            <tr>
+              <th class="d-none d-md-table-cell">ID</th>
+              <th>Trabajador</th>
+              <th class="d-none d-sm-table-cell">Tipo</th>
+              <th class="d-none d-lg-table-cell">Fecha Aplicación</th>
+              <th class="d-none d-lg-table-cell">Fecha Fin</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sancion of sancionesVencidasFiltradas" class="table-danger">
+              <td class="d-none d-md-table-cell">{{ sancion.id_sancion }}</td>
+              <td>
+                {{ sancion.trabajadores.nombre }} {{ sancion.trabajadores.apellido_paterno }} {{ sancion.trabajadores.apellido_materno }}
+              </td>
+              <td class="d-none d-sm-table-cell">{{ sancion.tipo_sancion }}</td>
+              <td class="d-none d-lg-table-cell">
+                {{ sancion.fecha_aplicacion | date : 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+              <td class="d-none d-lg-table-cell">
+                {{ sancion.fecha_fin | date : 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'bg-success': sancion.estatus === 'Activa',
+                    'bg-warning': sancion.estatus === 'Inactiva',
+                    'bg-secondary': sancion.estatus === 'Pendiente'
+                  }">
+                  {{ sancion.estatus }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex">
+                  <button
+                    class="btn btn-sm btn-light-blue me-2"
+                    (click)="verDetalles(sancion)"
+                    title="Ver detalles"
+                    data-bs-toggle="modal"
+                    data-bs-target="#detalleModal">
+                    <span class="material-icons">visibility</span>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminarSancion(sancion.id_sancion)" title="Eliminar">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="sancionesVencidasFiltradas.length === 0">
               <td colspan="7" class="text-center">No se encontraron sanciones</td>
             </tr>
           </tbody>
@@ -118,7 +195,7 @@
                   <option value="" disabled selected>
                     Seleccionar trabajador
                   </option>
-                  <option *ngFor="let trabajador of trabajadores" [value]="trabajador.id_trabajador">
+                  <option *ngFor="let trabajador of trabajadores" [ngValue]="trabajador.id_trabajador">
                     {{ trabajador.nombre }} {{ trabajador.apellido_paterno }} {{ trabajador.apellido_materno }}
                   </option>
                 </select>
@@ -143,6 +220,7 @@
                   class="form-control"
                   [(ngModel)]="nuevaSancion.fecha_aplicacion"
                   name="fecha_aplicacion"
+                  [min]="minFechaAplicacion"
                   required
                 />
               </div>
@@ -153,7 +231,11 @@
                   class="form-control"
                   [(ngModel)]="nuevaSancion.fecha_fin"
                   name="fecha_fin"
+                  [min]="nuevaSancion.fecha_aplicacion"
                 />
+                <div class="text-danger small" *ngIf="fechaFinInvalida">
+                  La fecha de finalización no puede ser anterior a la fecha de aplicación.
+                </div>
               </div>
             </div>
             <div class="mb-3">
@@ -186,10 +268,10 @@
                 data-bs-dismiss="modal"
               >Cancelar</button>
               <button
-                type="submit"
-                class="btn btn-light-blue"
-                [disabled]="!sancionForm.valid"
-              >
+                  type="submit"
+                  class="btn btn-light-blue"
+                  [disabled]="!sancionForm.valid || fechaFinInvalida"
+                >
                 <i class="bi bi-save me-2"></i>Guardar Sanción
               </button>
             </div>
@@ -233,11 +315,11 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <h6>Fecha Aplicación:</h6>
-                <p>{{ sancionSeleccionada.fecha_aplicacion | date : "dd/MM/yyyy" }}</p>
+                <p>{{ sancionSeleccionada.fecha_aplicacion | date : "dd/MM/yyyy":"UTC" }}</p>
               </div>
               <div class="col-md-6">
                 <h6>Fecha Fin:</h6>
-                <p>{{ sancionSeleccionada.fecha_fin | date : "dd/MM/yyyy" }}</p>
+                 <p>{{ sancionSeleccionada.fecha_fin | date : "dd/MM/yyyy":"UTC" }}</p>
               </div>
             </div>
             <div class="mb-3">
@@ -245,8 +327,8 @@
               <span
                 class="badge"
                 [ngClass]="{
-                  'bg-success': sancionSeleccionada.estatus === 'Inactiva',
-                  'bg-warning': sancionSeleccionada.estatus === 'Activa',
+                  'bg-success': sancionSeleccionada.estatus === 'Activa',
+                  'bg-warning': sancionSeleccionada.estatus === 'Inactiva',
                   'bg-secondary': sancionSeleccionada.estatus === 'Pendiente'
                 }"
               >
