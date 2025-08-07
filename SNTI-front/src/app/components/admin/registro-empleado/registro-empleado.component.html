@@ -210,7 +210,7 @@
       <input type="text" class="form-control" formControlName="institucion_estudios" maxlength="200" placeholder="Ej. UNAM">
       <small *ngIf="mensajeErroresCampos['institucion_estudios']" class="text-danger">{{ mensajeErroresCampos['institucion_estudios'] }}</small>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label>
         <input type="checkbox" formControlName="certificado_estudios" /> ¿Presenta certificado de estudios?
       </label>
@@ -218,7 +218,7 @@
       <input type="file" (change)="onFileChange($event)" accept=".pdf,.jpg,.png,.jpeg" [disabled]="!formEmpleado.get('certificado_estudios')?.value" />
       <div *ngIf="certificadoNombre">Archivo: {{ certificadoNombre }}</div>
       <small *ngIf="mensajeErroresCampos['certificado_estudios']" class="text-danger">{{ mensajeErroresCampos['certificado_estudios'] }}</small>
-    </div>
+    </div> -->
 
     <!-- ============ BOTÓN ============ -->
     <div class="form-actions">
