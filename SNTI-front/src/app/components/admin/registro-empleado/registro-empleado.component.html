@@ -56,7 +56,7 @@
     </div>
     <div class="form-group">
       <label>Rol</label>
-      <select class="form-control" formControlName="rol">
+      <select class="form-control" formControlName="rol" [disabled]="!!trabajadorEdit">
         <option value="USUARIO">Usuario</option>
         <option value="ADMINISTRADOR">Administrador</option>
       </select>

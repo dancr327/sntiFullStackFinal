@@ -174,7 +174,6 @@ export class RegistroEmpleadoComponent implements OnInit {
       identificador: emailValue ?? '',
       email: emailValue ?? '',
       contraseña: this.contrasena?.value ?? '',
-      rol: this.formEmpleado.value.rol ?? 'USUARIO',
       nombre: this.formEmpleado.value.nombre ?? '',
       apellido_paterno: this.formEmpleado.value.apellido_paterno ?? '',
       apellido_materno: this.formEmpleado.value.apellido_materno ?? '',
@@ -198,6 +197,10 @@ export class RegistroEmpleadoComponent implements OnInit {
       certificado_estudios: this.formEmpleado.value.certificado_estudios ?? false,
       plaza_base: this.formEmpleado.value.plaza_base ?? '',
     };
+
+    if (!this.trabajadorEdit) {
+      data.rol = this.formEmpleado.get('rol')?.value ?? 'USUARIO';
+    }
 
     const password = this.contrasena?.value?.trim();
     if (password && password.length >= 6) {
@@ -287,6 +290,7 @@ export class RegistroEmpleadoComponent implements OnInit {
     });
     this.formEmpleado.get('emailGroup.email')?.disable();
     this.formEmpleado.get('emailGroup.email2')?.disable();
+    this.formEmpleado.get('rol')?.disable();
   }
 
   ngOnInit() {

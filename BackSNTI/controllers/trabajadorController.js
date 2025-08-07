@@ -516,7 +516,13 @@ const actualizarTrabajador = async (req, res) => {
                 errors: [{ msg: `Los campos ${camposDuplicados.join(', ')} ya están registrados.` }]
             });
         }
-
+         // No permitir modificar el rol del trabajador
+        if (rol !== undefined && rol !== trabajadorExistente.rol) {
+            return res.status(403).json({
+                success: false,
+                message: 'No está permitido cambiar el rol del trabajador.'
+            });
+        }
         const dataToUpdate = {};
 
         if (identificador !== undefined) dataToUpdate.identificador = identificador;
@@ -526,7 +532,6 @@ const actualizarTrabajador = async (req, res) => {
     // dataToUpdate.contraseña_hash = await bcrypt.hash(contraseña, saltRounds);
     dataToUpdate.password_hash  = await bcrypt.hash(contraseña, saltRounds);
 }
-        if (rol !== undefined) dataToUpdate.rol = rol;
         if (nombre !== undefined) dataToUpdate.nombre = nombre;
         if (apellido_paterno !== undefined) dataToUpdate.apellido_paterno = apellido_paterno;
         if (apellido_materno !== undefined) dataToUpdate.apellido_materno = apellido_materno;
