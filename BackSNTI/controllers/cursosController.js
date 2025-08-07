@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const TipoDocumento = require('../enums/tipodocumento.enum');
 const CursoStatus = require('../enums/cursoStatus.enum');
 const { CURSOS_CONSTANCIAS_DIR } = require('../config/multerCursos');
+const Roles = require('../enums/roles.enum');
 
 // Prisma instance
 const prisma = new PrismaClient();
@@ -65,6 +66,19 @@ const crearCurso = async (req, res) => {
   const { codigo_curso, nombre_curso, horas_duracion, estatus, tipo_documento_curso } = req.body;
   const { originalname, filename, path: filePath, size, mimetype } = req.file;
 
+  // Obtener estado del administrador
+  let estadoAdmin = null;
+  try {
+    const admin = await prisma.trabajadores.findUnique({
+      where: { id_trabajador: req.user.id },
+      select: { seccion: { select: { estado: true } } }
+    });
+    estadoAdmin = admin?.seccion?.estado || null;
+  } catch (e) {
+    if (req.file) await safeUnlink(filePath);
+    return res.status(500).json({ success: false, message: 'Error al obtener estado del administrador.' });
+  }
+
   // Verificar duplicados antes de procesar el archivo
   try {
     const codigoExistente = await prisma.cursos.findUnique({ where: { codigo_curso } });
@@ -82,13 +96,26 @@ const crearCurso = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Error al verificar duplicados.', error: err.message });
   }
   
+  // Renombrar el archivo de constancia con formato: Constancia_Nombre_Curso_Codigo.ext
+  const extension = path.extname(originalname);
+  const constanciaNombre = `Constancia_${nombre_curso}_${codigo_curso}${extension}`.replace(/\s+/g, '_');
+  const nuevoPath = path.join(path.dirname(filePath), constanciaNombre);
+  try {
+    await fs.rename(filePath, nuevoPath);
+  } catch (e) {
+    await safeUnlink(filePath);
+    return res.status(500).json({ success: false, message: 'No se pudo renombrar el archivo de constancia.' });
+  }
+
+  const finalPath = nuevoPath;
+
   // Calcular hash del archivo
   let hash_archivo;
   try {
-    const buffer = await fs.readFile(filePath);
+    const buffer = await fs.readFile(finalPath);
     hash_archivo = crypto.createHash('sha256').update(buffer).digest('hex');
   } catch (e) {
-    await safeUnlink(filePath);
+    await safeUnlink(finalPath);
     return res.status(500).json({ success: false, message: 'No se pudo calcular hash del archivo.' });
   }
 
@@ -99,10 +126,10 @@ const crearCurso = async (req, res) => {
         data: {
           id_trabajador: null,
           tipo_documento: tipo_documento_curso || TipoDocumento.CONSTANCIA_NOMBRAMIENTO,
-          nombre_archivo: originalname,
+          nombre_archivo: constanciaNombre,
           descripcion: `Constancia general del curso "${nombre_curso}"`,
           hash_archivo,
-          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/'),
+          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), finalPath).replace(/\\/g, '/'),
           tamano_bytes: BigInt(size),
           mimetype,
           es_publico: false
@@ -117,7 +144,8 @@ const crearCurso = async (req, res) => {
           horas_duracion: parseInt(horas_duracion),
           estatus: estatus || CursoStatus.EN_CURSO,
           documento_constancia_id: documentoConstancia.id_documento,
-          tipo_documento_curso: tipo_documento_curso || TipoDocumento.CONSTANCIA_NOMBRAMIENTO
+          tipo_documento_curso: tipo_documento_curso || TipoDocumento.CONSTANCIA_NOMBRAMIENTO,
+              estado: estadoAdmin
         },
         include: {
           documentoConstancia: true
@@ -144,7 +172,21 @@ const crearCurso = async (req, res) => {
  */
 const getAllCursos = async (req, res) => {
   try {
+    let where = {};
+    if (req.user.role === Roles.ADMINISTRADOR) {
+      try {
+        const admin = await prisma.trabajadores.findUnique({
+          where: { id_trabajador: req.user.id },
+          select: { seccion: { select: { estado: true } } }
+        });
+        const estado = admin?.seccion?.estado;
+        if (estado) where = { estado };
+      } catch (e) {
+        return res.status(500).json({ success: false, message: 'Error al filtrar cursos por estado.' });
+      }
+    }
     const cursos = await prisma.cursos.findMany({
+      where,
       include: { documentoConstancia: true }
     });
     res.status(200).json({

@@ -20,4 +20,8 @@ export class CursosService {
   eliminarCursoConPassword(id: number, password: string) {
     return this.http.delete(`${this.apiUrl}/${id}/con-password`, { body: { password } });
   }
+
+  descargarConstancia(id: number) {
+    return this.http.get(`${this.apiUrl}/${id}/descargar-constancia`, { responseType: 'blob' });
+  }
 }

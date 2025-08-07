@@ -26,8 +26,7 @@ export class CursosComponent implements OnInit {
   cursoSeleccionado: Curso | null = null;
   inscripcionEditar: TrabajadorCurso | null = null;
   editCalificacion = '';
-  editCompletado = false;
-  docTipo: 'CONCLUSION_CURSO' | 'CERTIFICADO_CURSO' = 'CONCLUSION_CURSO';
+  docTipo: 'CONCLUSION_CURSO' | 'CERTIFICADO_CURSO' | 'INCONCLUSO' = 'CONCLUSION_CURSO';
   docArchivo: File | null = null;
   filtroBusqueda = '';
   filtroSeccion = '';
@@ -207,16 +206,17 @@ export class CursosComponent implements OnInit {
   abrirEditarInscripcion(ins: TrabajadorCurso) {
     this.inscripcionEditar = ins;
     this.editCalificacion = ins.calificacion || '';
-    this.editCompletado = !!ins.completado;
     this.docArchivo = null;
-    this.docTipo = 'CONCLUSION_CURSO';
+    if (ins.documentoCertificado) this.docTipo = 'CERTIFICADO_CURSO';
+    else if (ins.documentoConclusion) this.docTipo = 'CONCLUSION_CURSO';
+    else this.docTipo = 'INCONCLUSO';
     const modalEl = document.getElementById('editarModal');
     if (modalEl) (window as any).bootstrap?.Modal.getOrCreateInstance(modalEl).show();
   }
 
   actualizarInscripcion() {
     if (!this.inscripcionEditar) return;
-    const data: any = { calificacion: this.editCalificacion, completado: this.editCompletado };
+    const data: any = { calificacion: this.editCalificacion, completado: this.docTipo !== 'INCONCLUSO' };
     this.trabajadoresCursosService
       .actualizarInscripcionAdmin(this.inscripcionEditar.id_trabajador_curso, data)
       .subscribe({
@@ -233,8 +233,12 @@ export class CursosComponent implements OnInit {
     this.docArchivo = event.target.files[0];
   }
 
+  onDocTypeChange() {
+    if (this.docTipo === 'INCONCLUSO') this.docArchivo = null;
+  }
+
   subirDocumento() {
-    if (!this.inscripcionEditar || !this.docArchivo) return;
+    if (!this.inscripcionEditar || !this.docArchivo || this.docTipo === 'INCONCLUSO') return;
     const form = new FormData();
     form.append('tipo_documento', this.docTipo);
     form.append('documento', this.docArchivo);
@@ -259,6 +263,19 @@ export class CursosComponent implements OnInit {
         if (modalEl) (window as any).bootstrap?.Modal.getInstance(modalEl)?.hide();
       },
       error: () => alert('No se pudo eliminar el curso')
+    });
+  }
+
+  descargarConstancia() {
+    if (!this.cursoSeleccionado) return;
+    this.cursosService.descargarConstancia(this.cursoSeleccionado.id_curso).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const nombre = this.cursoSeleccionado?.documentoConstancia?.nombre_archivo || 'constancia.pdf';
+      a.download = nombre;
+      a.click();
+      window.URL.revokeObjectURL(url);
     });
   }
 }

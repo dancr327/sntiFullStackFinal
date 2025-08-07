@@ -64,6 +64,7 @@ model cursos {
   estatus                 String?      @default("En curso") @db.VarChar(20)
   documento_constancia_id Int?
   tipo_documento_curso    TipoDocumento?
+  estado                  EstadosMexico?
 
   documentoConstancia     documentos?  @relation("ConstanciaCursoGeneral", fields: [documento_constancia_id], references: [id_documento])
   trabajadores_cursos     trabajadores_cursos[]

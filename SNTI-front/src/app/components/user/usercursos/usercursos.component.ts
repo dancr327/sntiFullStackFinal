@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrabajadoresCursosService } from '../../../core/services/trabajadores-cursos.service';
+import { CursosService } from '../../../core/services/cursos.service';
 import { TrabajadorCurso } from '../../../core/models/trabajador-curso.model';
 
 @Component({
@@ -14,7 +15,10 @@ export class UsercursosComponent implements OnInit {
   inscripciones: TrabajadorCurso[] = [];
   inscripcionSel: TrabajadorCurso | null = null;
 
-  constructor(private trabajadoresCursosService: TrabajadoresCursosService) {}
+  constructor(
+    private trabajadoresCursosService: TrabajadoresCursosService,
+    private cursosService: CursosService
+  ) {}
 
   ngOnInit(): void {
     this.trabajadoresCursosService.misInscripciones().subscribe({
@@ -35,6 +39,19 @@ export class UsercursosComponent implements OnInit {
       const a = document.createElement('a');
       a.href = url;
       a.download = `${this.inscripcionSel?.cursos?.nombre_curso || 'documento'}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
+  descargarConstancia() {
+    if (!this.inscripcionSel) return;
+    this.cursosService.descargarConstancia(this.inscripcionSel.id_curso).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const nombre = this.inscripcionSel?.cursos?.documentoConstancia?.nombre_archivo || 'constancia.pdf';
+      a.download = nombre;
       a.click();
       window.URL.revokeObjectURL(url);
     });

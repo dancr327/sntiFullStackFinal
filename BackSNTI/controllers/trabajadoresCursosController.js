@@ -100,13 +100,24 @@ const crearInscripcion = async (req, res) => {
     return res.status(404).json({ success: false, message: 'Curso no encontrado.' });
   }
 
+  // Renombrar invitación con formato: Invitacion_a_curso_Nombre_Curso_Codigo.ext
+  const ext = path.extname(originalname);
+  const invitacionNombre = `Invitacion_a_curso_${curso.nombre_curso}_${curso.codigo_curso}${ext}`.replace(/\s+/g, '_');
+  const nuevoPath = path.join(path.dirname(filePath), invitacionNombre);
+  try {
+    await fs.rename(filePath, nuevoPath);
+  } catch {
+    await safeUnlink(filePath);
+    return res.status(500).json({ success: false, message: 'No se pudo renombrar la invitación.' });
+  }
+
   // Hash
   let hash_archivo;
   try {
-    const buffer = await fs.readFile(filePath);
+    const buffer = await fs.readFile(nuevoPath);
     hash_archivo = crypto.createHash('sha256').update(buffer).digest('hex');
   } catch {
-    await safeUnlink(filePath);
+    await safeUnlink(nuevoPath);
     return res.status(500).json({ success: false, message: 'No se pudo calcular hash del archivo.' });
   }
 
@@ -116,10 +127,10 @@ const crearInscripcion = async (req, res) => {
         data: {
           id_trabajador,
           tipo_documento,
-          nombre_archivo: originalname,
+          nombre_archivo: invitacionNombre,
           descripcion: `Invitación al curso ${curso.nombre_curso}`,
           hash_archivo,
-          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/'),
+          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), nuevoPath).replace(/\\/g, '/'),
           tamano_bytes: BigInt(size),
           mimetype,
           es_publico: false
@@ -143,11 +154,11 @@ const crearInscripcion = async (req, res) => {
       message: 'Inscripción y documento registrados correctamente.',
       data: sanitizeBigInt(result)
     });
-  } catch (error) {
-    if (req.file) await safeUnlink(filePath);
-    res.status(500).json({ success: false, message: 'Error al crear inscripción.', error: error.message });
-  }
-};
+      } catch (error) {
+      if (req.file) await safeUnlink(nuevoPath);
+      res.status(500).json({ success: false, message: 'Error al crear inscripción.', error: error.message });
+    }
+  };
 
 /**
  * @desc Inscribir trabajador (ADMIN) y subir invitación
@@ -193,13 +204,24 @@ const crearInscripcionAdmin = async (req, res) => {
     return res.status(404).json({ success: false, message: 'Trabajador no encontrado.' });
   }
 
+  // Renombrar invitación con formato: Invitacion_a_curso_Nombre_Curso_Codigo.ext
+  const ext = path.extname(originalname);
+  const invitacionNombre = `Invitacion_a_curso_${curso.nombre_curso}_${curso.codigo_curso}${ext}`.replace(/\s+/g, '_');
+  const nuevoPath = path.join(path.dirname(filePath), invitacionNombre);
+  try {
+    await fs.rename(filePath, nuevoPath);
+  } catch {
+    await safeUnlink(filePath);
+    return res.status(500).json({ success: false, message: 'No se pudo renombrar la invitación.' });
+  }
+
   // Hash del archivo
   let hash_archivo;
   try {
-    const buffer = await fs.readFile(filePath);
+    const buffer = await fs.readFile(nuevoPath);
     hash_archivo = crypto.createHash('sha256').update(buffer).digest('hex');
   } catch {
-    await safeUnlink(filePath);
+     await safeUnlink(nuevoPath);
     return res.status(500).json({ success: false, message: 'No se pudo calcular hash del archivo.' });
   }
 
@@ -209,10 +231,10 @@ const crearInscripcionAdmin = async (req, res) => {
         data: {
           id_trabajador: parseInt(id_trabajador),
           tipo_documento,
-          nombre_archivo: originalname,
+          nombre_archivo: invitacionNombre,
           descripcion: `Invitación al curso ${curso.nombre_curso}`,
           hash_archivo,
-          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/'),
+          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), nuevoPath).replace(/\\/g, '/'),
           tamano_bytes: BigInt(size),
           mimetype,
           es_publico: false
@@ -239,10 +261,10 @@ const crearInscripcionAdmin = async (req, res) => {
       data: sanitizeBigInt(result)
     });
   } catch (error) {
-    if (req.file) await safeUnlink(filePath);
-    res.status(500).json({ success: false, message: 'Error al crear inscripción.', error: error.message });
-  }
-};
+      if (req.file) await safeUnlink(nuevoPath);
+      res.status(500).json({ success: false, message: 'Error al crear inscripción.', error: error.message });
+    }
+  };
 
 
 /**
@@ -268,7 +290,8 @@ const subirDocumentoInscripcion = async (req, res) => {
     where: { id_trabajador_curso: parseInt(id) },
     include: {
       documentoCertificado: true,
-      documentoConclusion: true
+      documentoConclusion: true,
+      cursos: true
     }
   });
   if (!inscripcion || inscripcion.id_trabajador !== id_trabajador) {
@@ -286,13 +309,25 @@ const subirDocumentoInscripcion = async (req, res) => {
     return res.status(409).json({ success: false, message: 'Ya has subido el certificado para este curso.' });
   }
 
+  // Renombrar archivo según tipo
+  const ext = path.extname(originalname);
+  const base = tipo_documento === TipoDocumento.CERTIFICADO_CURSO ? 'Certificado' : 'Conclusion';
+  const nuevoNombre = `${base}_${inscripcion.cursos.nombre_curso}_${inscripcion.cursos.codigo_curso}${ext}`.replace(/\s+/g, '_');
+  const nuevoPath = path.join(path.dirname(filePath), nuevoNombre);
+  try {
+    await fs.rename(filePath, nuevoPath);
+  } catch {
+    await safeUnlink(filePath);
+    return res.status(500).json({ success: false, message: 'No se pudo renombrar el archivo.' });
+  }
+
   // Hash
   let hash_archivo;
   try {
-    const buffer = await fs.readFile(filePath);
+    const buffer = await fs.readFile(nuevoPath);
     hash_archivo = crypto.createHash('sha256').update(buffer).digest('hex');
   } catch {
-    await safeUnlink(filePath);
+    await safeUnlink(nuevoPath);
     return res.status(500).json({ success: false, message: 'No se pudo calcular hash del archivo.' });
   }
 
@@ -303,10 +338,10 @@ const subirDocumentoInscripcion = async (req, res) => {
         data: {
           id_trabajador,
           tipo_documento,
-          nombre_archivo: originalname,
+          nombre_archivo: nuevoNombre,
           descripcion: `${tipo_documento === TipoDocumento.CONCLUSION_CURSO ? 'Conclusión' : 'Certificado'} del curso`,
           hash_archivo,
-          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/'),
+          ruta_almacenamiento: path.relative(path.join(__dirname, '..'), nuevoPath).replace(/\\/g, '/'),
           tamano_bytes: BigInt(size),
           mimetype,
           es_publico: false
@@ -336,7 +371,7 @@ const subirDocumentoInscripcion = async (req, res) => {
     });
 
   } catch (error) {
-    if (req.file) await safeUnlink(filePath);
+    if (req.file) await safeUnlink(nuevoPath);
     res.status(500).json({ success: false, message: 'Error al subir documento.', error: error.message });
   }
 };
@@ -349,7 +384,7 @@ const listarInscripciones = async (req, res) => {
     const data = await prisma.trabajadores_cursos.findMany({
       include: {
         trabajadores: { select: { nombre: true, apellido_paterno: true, apellido_materno: true, identificador: true } },
-        cursos: true,
+        cursos: { include: { documentoConstancia: true } },
         documentoInvitacion: true,
         documentoConclusion: true,
         documentoCertificado: true
@@ -376,7 +411,7 @@ const misInscripciones = async (req, res) => {
       where: { id_trabajador },
       include: {
         trabajadores: { select: { nombre: true, apellido_paterno: true, apellido_materno: true, identificador: true } },
-        cursos: true,
+        cursos: { include: { documentoConstancia: true } },
         documentoInvitacion: true,
         documentoConclusion: true,
         documentoCertificado: true
@@ -511,7 +546,13 @@ const actualizarInscripcionAdmin = async (req, res) => {
     }
 
     const dataUpdate = {};
-    if (typeof calificacion !== 'undefined') dataUpdate.calificacion = calificacion;
+    if (typeof calificacion !== 'undefined') {
+      const cal = parseFloat(calificacion);
+      if (isNaN(cal) || cal < 0 || cal > 100) {
+        return res.status(400).json({ success: false, message: 'La calificación debe estar entre 0 y 100.' });
+      }
+      dataUpdate.calificacion = cal;
+    }
     if (typeof completado !== 'undefined') dataUpdate.completado = completado === 'true' || completado === true;
     if (fecha_completado) dataUpdate.fecha_completado = new Date(fecha_completado);
 

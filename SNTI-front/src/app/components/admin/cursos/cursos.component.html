@@ -73,6 +73,9 @@
       <div class="modal-body">
         <p><b>Código:</b> {{ cursoSeleccionado?.codigo_curso }}</p>
         <p><b>Horas:</b> {{ cursoSeleccionado?.horas_duracion }}</p>
+        <div class="mb-3" *ngIf="cursoSeleccionado?.documentoConstancia">
+          <button class="btn btn-outline-primary" (click)="descargarConstancia()">Constancia</button>
+        </div>
         <hr />
         <h6 class="title">Trabajadores inscritos</h6>
         <ul class="list-group">
@@ -238,23 +241,16 @@
             [(ngModel)]="editCalificacion"
           />
         </div>
-        <div class="form-check mb-3">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="compChk"
-            [(ngModel)]="editCompletado"
-          />
-          <label class="form-check-label" for="compChk">Completado</label>
-        </div>
-        <hr />
         <div class="mb-2">
-          <select class="form-select" [(ngModel)]="docTipo">
+          <label class="form-label">Estatus</label>
+          <select class="form-select" [(ngModel)]="docTipo" (ngModelChange)="onDocTypeChange()">
             <option value="CONCLUSION_CURSO">Conclusión</option>
             <option value="CERTIFICADO_CURSO">Certificado</option>
+            <option value="INCONCLUSO">Inconcluso</option>
           </select>
         </div>
         <input
+          *ngIf="docTipo !== 'INCONCLUSO'"
           type="file"
           class="form-control"
           (change)="onDocSelected($event)"
@@ -269,6 +265,7 @@
           Guardar
         </button>
         <button
+          *ngIf="docTipo !== 'INCONCLUSO'"
           type="button"
           class="btn btn-secondary"
           (click)="subirDocumento()"

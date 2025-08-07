@@ -1,4 +1,5 @@
 import { Documento } from './documento.model';
+import { Curso } from './curso.model';
 
 export interface TrabajadorCurso {
   id_trabajador_curso: number;
@@ -18,7 +19,8 @@ export interface TrabajadorCurso {
     identificador: string;
   };
   cursos?: {
-    id_curso: number;
-    nombre_curso: string;
+    cursos?: Curso;
+    documentoConstancia?: Documento;
+    nombre_curso?: string;
   };
 }
