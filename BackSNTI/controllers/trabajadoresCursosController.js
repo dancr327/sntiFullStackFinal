@@ -280,10 +280,11 @@ const subirDocumentoInscripcion = async (req, res) => {
     return res.status(400).json({ success: false, message: 'El archivo es obligatorio.' });
   }
 
-  const id_trabajador = req.user.id;
   const { id } = req.params;
   const { tipo_documento } = req.body;
   const { originalname, path: filePath, size, mimetype } = req.file;
+  const idUsuario = req.user.id;
+  const userRole = req.user.role;
 
   // Buscar inscripción y validar propiedad
   const inscripcion = await prisma.trabajadores_cursos.findUnique({
@@ -294,9 +295,13 @@ const subirDocumentoInscripcion = async (req, res) => {
       cursos: true
     }
   });
-  if (!inscripcion || inscripcion.id_trabajador !== id_trabajador) {
+  if (!inscripcion) {
     await safeUnlink(filePath);
-    return res.status(404).json({ success: false, message: 'Inscripción no encontrada o no es tuya.' });
+    return res.status(404).json({ success: false, message: 'Inscripción no encontrada.' });
+  }
+  if (userRole !== Roles.ADMINISTRADOR && inscripcion.id_trabajador !== idUsuario) {
+    await safeUnlink(filePath);
+    return res.status(403).json({ success: false, message: 'No tienes permiso para subir documentos a esta inscripción.' });
   }
 
   // Validar que NO exista ya ese documento
@@ -332,6 +337,7 @@ const subirDocumentoInscripcion = async (req, res) => {
   }
 
   try {
+    const ownerId = inscripcion.id_trabajador;
     const result = await prisma.$transaction(async (tx) => {
       // Nuevo documento
       const nuevoDoc = await tx.documentos.create({

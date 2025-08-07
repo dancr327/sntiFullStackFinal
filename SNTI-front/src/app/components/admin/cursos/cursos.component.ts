@@ -62,10 +62,8 @@ export class CursosComponent implements OnInit {
   cargarTrabajadores(): void {
     this.trabajadoresService.getTrabajadores().subscribe({
       next: (todos: Trabajador[]) => {
-        if (this.usuarioActual?.seccion?.id_seccion) {
-          this.trabajadores = todos.filter(t => t.id_seccion === this.usuarioActual!.seccion.id_seccion);
-        } else if (this.usuarioActual?.seccion?.estado) {
-          this.trabajadores = todos.filter(t => t.seccion?.estado === this.usuarioActual!.seccion.estado);
+        if (this.usuarioActual?.seccion?.estado) {
+          this.trabajadores = todos.filter(t => t.seccion?.estado === this.usuarioActual!.seccion!.estado);
         } else {
           this.trabajadores = todos;
         }

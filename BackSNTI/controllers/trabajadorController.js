@@ -132,7 +132,16 @@ const verificarDuplicados = async (data, excludeId = null) => {
  */
 const listarTrabajadores = async (req, res) => {
     try {
+        const admin = await prisma.trabajadores.findUnique({
+            where: { id_trabajador: req.user.id },
+            include: { seccion: true }
+        });
+
+        if (!admin || !admin.seccion) {
+            return res.status(403).json({ success: false, message: 'No tienes sección asignada.' });
+        }
         const trabajadores = await prisma.trabajadores.findMany({
+            where: { seccion: { estado: admin.seccion.estado } },
             select: {
                 id_trabajador: true,
                 identificador: true,
@@ -163,7 +172,6 @@ const listarTrabajadores = async (req, res) => {
                 fecha_creacion: true,
                 ultimo_login: true,
                 fecha_actualizacion: true,
-                // Incluir la relación de sección si es necesario mostrar el nombre de la sección, etc.
                 seccion: {
                     select: {
                         numero_seccion: true,
