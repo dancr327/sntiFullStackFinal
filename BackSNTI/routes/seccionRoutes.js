@@ -171,10 +171,8 @@ router.post(
  * /secciones:
  *   get:
  *     summary: Obtiene todas las secciones
- *     description: Accesible para ADMINISTRADORES y USUARIOS
+ *     description: Accesible públicamente
  *     tags: [Secciones]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de secciones
@@ -184,17 +182,11 @@ router.post(
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Seccion'
- *       401:
- *         description: No autorizado
- *       403:
- *         description: Prohibido
  *       500:
  *         description: Error del servidor
  */
 router.get(
   '/',
-  verifyToken,
-  hasRole([Roles.ADMINISTRADOR, Roles.USUARIO]),
   seccionController.getAllSecciones
 );
 
@@ -203,10 +195,8 @@ router.get(
  * /secciones/{id}:
  *   get:
  *     summary: Obtiene sección por ID
- *     description: Accesible para ADMINISTRADORES y USUARIOS
+ *     description: Accesible públicamente
  *     tags: [Secciones]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -223,10 +213,6 @@ router.get(
  *               $ref: '#/components/schemas/Seccion'
  *       400:
  *         description: ID inválido
- *       401:
- *         description: No autorizado
- *       403:
- *         description: Prohibido
  *       404:
  *         description: No encontrada
  *       500:
@@ -234,8 +220,6 @@ router.get(
  */
 router.get(
   '/:id',
-  verifyToken,
-  hasRole([Roles.ADMINISTRADOR, Roles.USUARIO]),
   [
     param('id')
       .isInt().withMessage('ID debe ser entero')

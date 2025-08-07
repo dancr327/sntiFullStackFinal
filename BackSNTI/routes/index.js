@@ -27,7 +27,10 @@ const cambioAdscripcionRoutes = require('./cambioAdscripcionRoutes'); // Asegúr
 // Si quieres un hasRole general aquí, necesitarás ajustar el middleware para que no falle sin roles.
 
 router.use('/trabajadores', authMiddleware.verifyToken, authorizationMiddleware.hasRole([Roles.USUARIO, Roles.ADMINISTRADOR]), trabajadorRoutes);
-router.use('/secciones', authMiddleware.verifyToken, authorizationMiddleware.hasRole([Roles.ADMINISTRADOR]), seccionRoutes);
+// Las secciones deben ser accesibles públicamente para lectura, por lo que
+// no aplicamos middlewares globales al montar el enrutador. Cada ruta dentro
+// de seccionRoutes gestionará su propia autenticación según sea necesario.
+router.use('/secciones', seccionRoutes);
 router.use('/documentos', authMiddleware.verifyToken, authorizationMiddleware.hasRole([Roles.USUARIO, Roles.ADMINISTRADOR]), documentosPanelRoutes);
 router.use('/permisos', authMiddleware.verifyToken, authorizationMiddleware.hasRole([Roles.USUARIO, Roles.ADMINISTRADOR]), permisosRoutes);
 router.use('/sanciones', authMiddleware.verifyToken, authorizationMiddleware.hasRole([Roles.USUARIO, Roles.ADMINISTRADOR]), sancionesRoutes);

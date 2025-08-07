@@ -20,6 +20,7 @@
       {{ u.nombre }} {{ u.apellido_paterno }} {{ u.apellido_materno }}
     </h3>
     <p *ngIf="usuario as u">Rol {{ u.rol }}</p>
+    <p *ngIf="usuario as u">Sección {{ u.seccion.numero_seccion }} - {{ u.seccion.estado }}</p>
   </div>
 </div>
 
